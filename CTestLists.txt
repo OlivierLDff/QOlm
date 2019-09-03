@@ -1,0 +1,34 @@
+#
+#   ObjectListModel CTest script
+#
+#   Copyright Olivier Le Doeuff 2019
+#
+
+enable_testing()
+
+# We need QSignalSpy
+FIND_PACKAGE(Qt5Test CONFIG REQUIRED)
+
+set(OBJLISTMODEL_TEST_TARGET ${OBJLISTMODEL_TESTS_PREFIX}_Tests)
+
+set(OBJLISTMODEL_TEST_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests)
+
+set(OBJLISTMODEL_TEST_SRCS  ${OBJLISTMODEL_TEST_TARGET_DIR}/Tests.cpp
+        ${OBJLISTMODEL_TEST_TARGET_DIR}/ObjectListTests.cpp
+        ${OBJLISTMODEL_TEST_TARGET_DIR}/SharedObjectListTests.cpp
+        ${OBJLISTMODEL_TEST_TARGET_DIR}/include/FooTest.hpp
+    )
+
+message(STATUS "Add Test: ${OBJLISTMODEL_TEST_TARGET}")
+
+# Create the executable
+add_executable(${OBJLISTMODEL_TEST_TARGET} ${OBJLISTMODEL_TEST_SRCS})
+set_target_properties(${OBJLISTMODEL_TEST_TARGET} PROPERTIES AUTOMOC TRUE)
+target_include_directories(${OBJLISTMODEL_TEST_TARGET} PUBLIC ${OBJLISTMODEL_TEST_TARGET_DIR}/include)
+target_link_libraries(${OBJLISTMODEL_TEST_TARGET} ${OBJLISTMODEL_TARGET})
+target_link_libraries(${OBJLISTMODEL_TEST_TARGET} gtest)
+qt5_use_modules( ${OBJLISTMODEL_TARGET} Test )
+set_target_properties(${OBJLISTMODEL_TEST_TARGET} PROPERTIES FOLDER ${OBJLISTMODEL_FOLDER_PREFIX}/Tests)
+
+# Register the test
+add_test(NAME ${OBJLISTMODEL_TEST_TARGET} COMMAND ${OBJLISTMODEL_TEST_TARGET})

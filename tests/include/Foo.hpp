@@ -1,8 +1,7 @@
-#ifndef __FOO_TEST_HPP__
-#define __FOO_TEST_HPP__
+#ifndef __FOO_HPP__
+#define __FOO_HPP__
 
 #include <QObject>
-#include <ObjectListModel.hpp>
 
 class Foo : public QObject
 {
@@ -24,11 +23,6 @@ public:
     }
 signals:
     void fooChanged();
-};
-
-class FooList : public Olm::ObjectList<Foo>
-{
-    Q_OBJECT
 };
 
 #endif

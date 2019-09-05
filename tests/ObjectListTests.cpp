@@ -1,11 +1,13 @@
 // Spy signal call without having a main loop
 #include <QSignalSpy>
+#include <QDateTime>
+#include <QDebug>
 
 // gtest framework
 #include <gtest/gtest.h>
 
 // Our test classes
-#include <FooTest.hpp>
+#include <FooList.hpp>
 
 // First basic test fixture that have only one QObject
 class ObjectListTest : public ::testing::Test
@@ -51,4 +53,18 @@ TEST_F(ObjectListTest, Append)
 
     delete foo1;
     delete foo2;
+}
+
+TEST_F(ObjectListTest, AppendFuzz)
+{
+    auto initTime = QDateTime::currentMSecsSinceEpoch();
+    for(int i = 0; i < 10000; ++i)
+        _list.append(new Foo());
+    auto appendTime = QDateTime::currentMSecsSinceEpoch();
+    ASSERT_EQ(_list.size(), 10000);
+    int i = 0;
+    _list.clear();
+    auto clearTime = QDateTime::currentMSecsSinceEpoch();
+
+    qDebug("Append 10000 QObject Time : %llu ms. Clear time : %llu ms", (appendTime - initTime), (clearTime - appendTime));
 }

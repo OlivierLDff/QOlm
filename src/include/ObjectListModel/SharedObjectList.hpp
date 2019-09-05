@@ -95,7 +95,6 @@ public slots: // virtual methods API for QML
     virtual QSharedPointer<QObject> get(const QString & uid) const = 0;
     virtual QSharedPointer<QObject> getFirst(void) const = 0;
     virtual QSharedPointer<QObject> getLast(void) const = 0;
-    virtual QVariantList toVarArray(void) const = 0;
 
 protected slots: // internal callback
     virtual void onItemPropertyChanged(void) = 0;

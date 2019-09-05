@@ -55,7 +55,7 @@ set( OBJLISTMODEL_ENABLE_TESTS OFF CACHE BOOL "Create or not a target for test (
 set( OBJLISTMODEL_TESTS_PREFIX ${OBJLISTMODEL_PROJECT} CACHE STRING "Prefix for all ObjectListModel tests" )
 
 # Examples
-set( OBJLISTMODEL_ENABLE_EXAMPLES OFF CACHE BOOL "Create or not a target for examples" FORCE )
+set( OBJLISTMODEL_ENABLE_EXAMPLES OFF CACHE BOOL "Create or not a target for examples" )
 set( OBJLISTMODEL_EXAMPLES_PREFIX ${OBJLISTMODEL_PROJECT} CACHE STRING "Prefix for all ObjectListModel tests" )
 
 # Install
@@ -190,7 +190,7 @@ set_target_properties(${OBJLISTMODEL_TARGET} PROPERTIES PREFIX "")
 
 # Link Qt5
 set_target_properties(${OBJLISTMODEL_TARGET} PROPERTIES AUTOMOC TRUE)
-qt5_use_modules( ${OBJLISTMODEL_TARGET} Core Qml )
+
 
 set_target_properties(${OBJLISTMODEL_TARGET} PROPERTIES FOLDER ${OBJLISTMODEL_FOLDER_PREFIX})
 
@@ -229,13 +229,16 @@ if(OBJLISTMODEL_ENABLE_EXAMPLES)
 
         message(STATUS "Add Example: ${EXAMPLE_FULL_NAME}")
 
-        add_executable       (${EXAMPLE_FULL_NAME} ${OBJLISTMODEL_EXAMPLES_FOLDER}/${EXAMPLE_NAME}.cpp)
-        target_link_libraries(${EXAMPLE_FULL_NAME} ${OBJLISTMODEL_TARGET})
-        set_target_properties(${EXAMPLE_FULL_NAME} PROPERTIES FOLDER ${OBJLISTMODEL_FOLDER_PREFIX}/Examples)
+        add_executable            (${EXAMPLE_FULL_NAME} ${OBJLISTMODEL_EXAMPLES_FOLDER}/${EXAMPLE_NAME}.cpp
+                                    ${OBJLISTMODEL_EXAMPLES_FOLDER}/include/FooExample.hpp)
+        set_target_properties     (${EXAMPLE_FULL_NAME} PROPERTIES AUTOMOC TRUE)
+        target_link_libraries     (${EXAMPLE_FULL_NAME} ${OBJLISTMODEL_TARGET})
+        set_target_properties     (${EXAMPLE_FULL_NAME} PROPERTIES FOLDER ${OBJLISTMODEL_FOLDER_PREFIX}/Examples)
+        target_include_directories(${EXAMPLE_FULL_NAME} PUBLIC ${OBJLISTMODEL_EXAMPLES_FOLDER}/include)
 
     endmacro()
 
-    # objlist_example_add(ListInterfaceApplication)
+    objlist_example_add(ObjectListExample)
 
 endif(OBJLISTMODEL_ENABLE_EXAMPLES)
 

@@ -1,3 +1,6 @@
+#ifndef __FOO_TEST_HPP__
+#define __FOO_TEST_HPP__
+
 #include <QObject>
 #include <ObjectListModel.hpp>
 
@@ -27,3 +30,5 @@ class FooList : public Olm::ObjectList<Foo>
 {
     Q_OBJECT
 };
+
+#endif

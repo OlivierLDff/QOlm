@@ -24,18 +24,24 @@ protected:
 
 TEST_F(ObjectListTest, Append)
 {
+    QSignalSpy spyAboutToInsert(&_list, &Olm::ObjectListBase::itemAboutToBeInserted);
+    QSignalSpy spyInsert(&_list, &Olm::ObjectListBase::itemInserted);
     ASSERT_EQ(_list.size(), 0);
 
     auto foo1 = new Foo();
     _list.append(foo1);
 
     ASSERT_EQ(_list.size(), 1);
+    ASSERT_EQ(spyAboutToInsert.count(), 1);
+    ASSERT_EQ(spyInsert.count(), 1);
 
     auto foo2 = new Foo();
     _list.append(foo2);
     _list.append(foo1);
 
     ASSERT_EQ(_list.size(), 3);
+    ASSERT_EQ(spyAboutToInsert.count(), 3);
+    ASSERT_EQ(spyInsert.count(), 3);
 
     ASSERT_TRUE(_list.at(0) == foo1);
     ASSERT_TRUE(_list.at(1) == foo2);

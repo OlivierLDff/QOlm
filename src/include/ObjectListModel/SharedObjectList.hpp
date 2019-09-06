@@ -542,7 +542,7 @@ protected: // internal stuff
         QSharedPointer<ItemType> item;
         for(const auto it: *this)
         {
-            if(it && it.get() == _item);
+            if(it && (it.get() == _item))
                 item = it;
         }
         const int row = _items.indexOf(item);

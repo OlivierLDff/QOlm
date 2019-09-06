@@ -108,7 +108,6 @@ message("                                                     ")
 # └──────────────────────────────────────────────────────────────────┘
 
 FIND_PACKAGE(Qt5Core CONFIG REQUIRED)
-FIND_PACKAGE(Qt5Network CONFIG REQUIRED)
 
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                       DEPENDENCIES                               │
@@ -173,7 +172,7 @@ if(OBJLISTMODEL_BUILD_SHARED)
         ${OBJLISTMODEL_INCS}
         )
 
-ELSE(OBJLISTMODEL_BUILD_SHARED)
+else(OBJLISTMODEL_BUILD_SHARED)
 
     add_library(${OBJLISTMODEL_TARGET} STATIC ${OBJLISTMODEL_SRCS}
         ${OBJLISTMODEL_INCS}

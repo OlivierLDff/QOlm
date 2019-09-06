@@ -107,7 +107,7 @@ message("                                                     ")
 # │                         QT5 CMAKE                                │
 # └──────────────────────────────────────────────────────────────────┘
 
-FIND_PACKAGE(Qt5Core CONFIG REQUIRED)
+find_package(Qt5Core CONFIG REQUIRED)
 
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                       DEPENDENCIES                               │

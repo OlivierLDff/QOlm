@@ -210,7 +210,6 @@ endif(OBJLISTMODEL_USE_NAMESPACE)
 # └──────────────────────────────────────────────────────────────────┘
 
 if(OBJLISTMODEL_ENABLE_TESTS)
-    FetchContent_MakeAvailable(gtest)
     include(${CMAKE_CURRENT_SOURCE_DIR}/CTestLists.txt)
 endif(OBJLISTMODEL_ENABLE_TESTS)
 

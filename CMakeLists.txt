@@ -12,8 +12,8 @@ cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
 # DEPENDANCIES
 
-set(GTEST_REPOSITORY "https://github.com/google/googletest" CACHE STRING "Repository of gtest")
-set(GTEST_TAG "master" CACHE STRING "Git tag/branch of gtest")
+set(GTEST_REPOSITORY "https://github.com/google/googletest" CACHE STRING "Repository of googletest")
+set(GTEST_TAG "master" CACHE STRING "Git tag/branch of googletest")
 
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                       PROJECT SETTINGS                           │
@@ -115,15 +115,12 @@ find_package(Qt5Core CONFIG REQUIRED)
 
 include(FetchContent)
 
-# gtest
+# googletest
 FetchContent_Declare(
-    gtest
+    googletest
     GIT_REPOSITORY ${GTEST_REPOSITORY}
     GIT_TAG        ${GTEST_TAG}
 )
-
-# Is it a thing ??
-set(GTEST_FOLDER_PREFIX "Tests/Dependencies/gtest" CACHE STRING "")
 
 set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 set(FETCHCONTENT_QUIET ON)

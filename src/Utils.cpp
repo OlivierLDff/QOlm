@@ -10,7 +10,7 @@
 #include <QCoreApplication> // Call register type at startup when loaded as a dynamic library
 #include <QLoggingCategory> // Logging support
 
-// Dependancies Header
+// Dependencies Header
 
 // Application Header
 #include <ObjectListModel/Utils.hpp>

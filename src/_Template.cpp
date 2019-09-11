@@ -8,7 +8,7 @@
 
 // Qt Header
 
-// Dependancies Header
+// Dependencies Header
 
 // Application Header
 #include <ObjectListModel/_Template.hpp>

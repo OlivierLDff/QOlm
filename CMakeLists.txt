@@ -10,7 +10,7 @@
 
 cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 
-# DEPENDANCIES
+# DEPENDENCIES
 
 set(GTEST_REPOSITORY "https://github.com/google/googletest" CACHE STRING "Repository of googletest")
 set(GTEST_TAG "master" CACHE STRING "Git tag/branch of googletest")

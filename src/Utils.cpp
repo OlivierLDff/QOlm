@@ -30,27 +30,26 @@ static const char** _uri = &_defaultUri;
 static quint8 _major = 1;
 static quint8 _minor = 0;
 
-static void registerTypes()
+static void ObjListModel_registerTypes()
 {
-    // Controller
-    //qCDebug(OBJLISTMODEL_REGISTER_LOG_CAT, "Register %s.Controller %d.%d to QML", *_uri, _major, _minor);
-    //OBJLISTMODEL_NAMESPACE::Controller::registerToQml(*_uri, _major, _minor);
 }
 
-static void registerTypes(const char* uri, const quint8 major, const quint8 minor)
+static void ObjListModel_registerTypes(const char* uri, const quint8 major, const quint8 minor)
 {
     if(uri)
         _uri = &uri;
     _major = major;
     _minor = minor;
-    registerTypes();
+    ObjListModel_registerTypes();
 }
 
-Q_COREAPP_STARTUP_FUNCTION(registerTypes)
+#ifndef OBJLISTMODEL_STATIC
+Q_COREAPP_STARTUP_FUNCTION(ObjListModel_registerTypes)
+#endif
 
 OBJLISTMODEL_USING_NAMESPACE;
 
 void Utils::registerTypes(const char* uri, const quint8 major, const quint8 minor)
 {
-	::registerTypes(uri, major, minor);
+	::ObjListModel_registerTypes(uri, major, minor);
 }

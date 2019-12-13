@@ -70,7 +70,7 @@ set( CMAKE_CXX_STANDARD 11 )
 
 # LOG OPTIONS
 
-message("---------------- OBJLISTMODEL OPTIONS. ----------------")
+message(STATUS "---------------- OBJLISTMODEL OPTIONS. ----------------")
 
 #General
 message(STATUS "OBJLISTMODEL_PROJECT          : " ${OBJLISTMODEL_PROJECT})
@@ -100,8 +100,7 @@ if(OBJLISTMODEL_ENABLE_INSTALL)
 message(STATUS "OBJLISTMODEL_INSTALL_PREFIX   : " ${OBJLISTMODEL_INSTALL_PREFIX})
 endif(OBJLISTMODEL_ENABLE_INSTALL)
 
-message("---------------- DONE WITH OPTIONS. -----------------")
-message("                                                     ")
+message(STATUS "---------------- DONE WITH OPTIONS. -----------------")
 
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                         QT5 CMAKE                                │

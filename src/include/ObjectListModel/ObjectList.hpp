@@ -118,10 +118,10 @@ template<class ItemType>
 class ObjectList : public ObjectListBase
 {
 public:
-    explicit ObjectList(QObject*          parent      = Q_NULLPTR,
-                                  const QList<QByteArray> & exposedRoles = QList<QByteArray>(),
-                                  const QByteArray & displayRole = QByteArray(),
-                                  const QByteArray & uidRole     = QByteArray())
+    explicit ObjectList(QObject* parent = Q_NULLPTR,
+        const QList<QByteArray> & exposedRoles = {},
+        const QByteArray & displayRole = {},
+        const QByteArray& uidRole = {})
         : ObjectListBase(parent)
         , _count(0)
         , _uidRoleName(uidRole)

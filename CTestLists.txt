@@ -22,7 +22,6 @@ set(OBJLISTMODEL_TEST_SRCS  ${OBJLISTMODEL_TEST_TARGET_DIR}/Tests.cpp
 
         ${OBJLISTMODEL_TEST_TARGET_DIR}/include/Foo.hpp
         ${OBJLISTMODEL_TEST_TARGET_DIR}/include/FooList.hpp
-        ${OBJLISTMODEL_TEST_TARGET_DIR}/include/SharedFooList.hpp
     )
 
 message(STATUS "Add Test: ${OBJLISTMODEL_TEST_TARGET}")

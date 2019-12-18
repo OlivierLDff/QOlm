@@ -6,8 +6,6 @@ Additional data models aimed to bring more power to QML applications by using us
 
 * ObjectList : a much nicer way to expose C++ list to QML than the quick & dirty `QList<QObject*>` property . Supports all the strong model features of QAbstractListModel while showing the simple and well know API of QList.
 
-* SharedObjectList : Same as ObjectList but with `QSharedPointer<QObject>` that allow to easily share QObject based class between different list without the need of managing ownership
-
 ## Dependencies
 
 * [gtest](https://github.com/google/googletest) : Unit and mock testing framework

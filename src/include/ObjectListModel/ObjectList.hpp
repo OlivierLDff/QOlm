@@ -118,6 +118,24 @@ template<class ItemType>
 class ObjectList : public ObjectListBase
 {
 public:
+    /**
+     * @brief      Build a list object
+     *
+     * @param      parent        The qt parent. This can be left null, but it's recommended
+     * to always use a qt parent. This allow automatic memory management.
+     * When an object is destroyed, all the children are also destroyed.
+     * @param[in]  exposedRoles  The exposed roles list. It's a list of string with named
+     * properties that should be exposed as roles. By defaults all the Q_PROPERTY declared
+     * attributes are exposed as roles. Some roles are blacklisted.
+     * * id
+     * * index
+     * * class
+     * * model
+     * * modelData
+     * These name should never be used as Q_PROPERTY in general because they conflicts QML basics keywords.
+     * @param[in]  displayRole   The display role. This is the role used to display the object/content of the object by default when no roles is specified.
+     * @param[in]  uidRole       The uid role is used to uniquely identify the object in the list. In the library ObjectList, uid can be whatever but here we want to use the network local id in the object as uid. Because, the uid uniqueness is provided by the NetworkObject backend.
+     */
     explicit ObjectList(QObject* parent = Q_NULLPTR,
         const QList<QByteArray> & exposedRoles = {},
         const QByteArray & displayRole = {},
@@ -382,7 +400,7 @@ public: // C++ API
         if(idx != pos && idx >=0 && pos>=0 && idx < _items.size() && pos < _items.size())
         {
             itemAboutToBeMoved(_items.at(idx), idx, pos);
-            beginMoveRows(noParent(), idx, idx, noParent(),(idx < pos ? pos +1 : pos));
+            beginMoveRows(noParent(), idx, idx, noParent(), (idx < pos ? pos +1 : pos));
             _items.move(idx, pos);
             endMoveRows();
             itemMoved(_items.at(idx), idx, pos);

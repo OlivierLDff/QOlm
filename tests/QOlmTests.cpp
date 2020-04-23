@@ -26,8 +26,8 @@ protected:
 
 TEST_F(ObjectListTest, Append)
 {
-    QSignalSpy spyAboutToInsert(&_list, &Olm::ObjectListBase::itemAboutToBeInserted);
-    QSignalSpy spyInsert(&_list, &Olm::ObjectListBase::itemInserted);
+    QSignalSpy spyAboutToInsert(&_list, &QOlm::QOlmBase::rowsAboutToBeInserted);
+    QSignalSpy spyInsert(&_list, &QOlm::QOlmBase::rowsInserted);
     ASSERT_EQ(_list.size(), 0);
 
     auto foo1 = new Foo();

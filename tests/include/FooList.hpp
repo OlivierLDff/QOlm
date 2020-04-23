@@ -1,10 +1,10 @@
 #ifndef __FOO_LIST_HPP__
 #define __FOO_LIST_HPP__
 
-#include <ObjectListModel.hpp>
+#include <QOlm/QOlm.hpp>
 #include <Foo.hpp>
 
-class FooList : public Olm::ObjectList<Foo>
+class FooList : public QOlm::QOlm<Foo>
 {
     Q_OBJECT
 };

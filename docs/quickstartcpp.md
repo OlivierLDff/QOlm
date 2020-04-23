@@ -1,98 +1,10 @@
-# QOlm
+---
+layout: default
+title: 🚀 Quick Start With C++
+nav_order: 1
+---
 
-Bring `QOlm::QOlm` data type based on `QAbstractListModel` that provide a list of `QObject` based class to **js** and **c++**. The goal of this list is to dynamically update views by reacting to **insert**, **remove**, **move** operations.
-
-## Overview
-
-
-<p align="center">
-  <img src="./docs/ClassDiagram.svg"/>
-</p>
-
-
-`QOlm` is based on `QAbstractListModel`, and behave as a list of custom `QObject`. `QOlmBase` is detail implementation to provide `signals` and `slots` that `moc` can handle. Since `moc` isn't working with template class.
-
-### Build and execute.
-
-- QOlm is a header only library available as a `INTERFACE` cmake target.
-- It come with unit tests `QOlm_Tests`
-- It come with examples `QOlm_Examples`
-
-#### CMake super build
-
-Add the following code snippet to your `CMakelists.txt`. This will download and build QOlm with `MyTarget`.
-
-`CMake 3.14` is required, `CMake 3.17` is recommended to take advantage of `pch` headers.
-
-```cmake
-# ...
-include(FetchContent)
-FetchContent_Declare(
-    QOlm
-    GIT_REPOSITORY "https://github.com/OlivierLDff/QOlm"
-    GIT_TAG        "master"
-)
-# ...
-FetchContent_MakeAvailable(QOlm)
-# ...
-
-target_link_libraries(MyTarget PUBLIC QOlm)
-```
-
-#### Execute tests
-
-If `QOLM_ENABLE_TESTS` is on then you can execute unit test.
-
-```bash
-cmake -DQOLM_ENABLE_TESTS=ON ..
-cmake --build . --target QOlm_Tests --config "Release"
-ctest -C "Release" .
-```
-
-To only execute certain test in as a developer:
-
-```
-./tests/QOlm_Tests --gtest_filter=TestCaseRegEx*
-```
-
-#### Execute Example
-
-The option `QOLM_ENABLE_EXAMPLES` should be turned on.
-
-```bash
-cmake -DQOLM_ENABLE_EXAMPLES=ON ..
-cmake --build . --target QOlm_Examples --config "Release"
-./examples/QOlm_Examples
-```
-
-#### Additional CMake flags
-
-Since CMake is using `FetchContent` functionality, you can add flags to understand what is going on. The library also require package Qt, so you need to indicate where Qt SDK is installed. Provide the path with `CMAKE_PREFIX_PATH`.
-
-```bash
-cmake
-# Log output during download of dependencies
--DFETCHCONTENT_QUIET=OFF
-# Avoid that dependencies source gets pulled at each cmake command
-# Very useful when developping on dependencies too.
--DFETCHCONTENT_UPDATES_DISCONNECTED=ON
--DCMAKE_PREFIX_PATH=/Path/To/Qt
-..
-```
-
-#### Dependencies
-
-QOlm is fetching quite a few external libraries. Source of those libraries can be customize. Variables are in form `_REPOSITORY` and `_TAG`
-
-- Qt `Core` `Qml`.
-- `EVENTPP`: Provide typed callback for insert/removed/moved operation.
-
-##### Dependencies of tests
-
-- `GTEST` : Provide `gtest` library for unit tests.
-- Qt `Tests`.
-
-### C++ Getting started
+# 🚀 Quick Start With C++
 
 Most of the time you want to store more than just `QObject` type, so create your custom type.
 
@@ -132,7 +44,9 @@ public:
 
 Then simply use it as a regular list.
 
-#### Insert elements
+## 📄 Api
+
+### Insert elements
 
 The object provide multiple way to insert an object in the list:
 
@@ -162,7 +76,7 @@ list.append(&foo3);
 list.insert(1, &foo4);
 ```
 
-#### Remove elements
+###  Remove elements
 
 To remove an item, simply call the `remove` function, either with a pointer to the `_Object*` , or with the index of the object at which you want to remove.
 
@@ -184,7 +98,7 @@ list.remove(2);
 list.clear();
 ```
 
-#### Move elements
+### Move elements
 
 Elements can be moved within the list, without changing the list size.
 
@@ -215,7 +129,7 @@ list.movePrevious(2);
 list.moveNext(2);
 ```
 
-#### Access element and get index
+### Access element and get index
 
 Multiple accessors can be used to get data.
 
@@ -225,7 +139,7 @@ Multiple accessors can be used to get data.
 * `size`: Give the number of objects in the model
 * `empty` : True if model is empty.
 
-#### Object ownership
+## 🏠 Object ownership
 
 The library follow qt ownership rules. So when inserting an object without parent, the list take ownership of that object. When the same object is removed it will be `deleteLater`.
 
@@ -237,9 +151,9 @@ list.append(new Foo());
 list.remove(0);
 ```
 
-#### Observe list
+## 🔎 Observe Insert/Remove/Move
 
-##### Observe as QAbstractItemModel
+### Observe as QAbstractItemModel
 
 The `QOlm::QOlm` derived object can be observe for insertion and deletion like any qt model.
 
@@ -252,7 +166,7 @@ The `QOlm::QOlm` derived object can be observe for insertion and deletion like a
 
 But those signals are not very convenient to use as a end user. That's why `QOlm` provide other way to observe the list.
 
-##### Observe thru signals
+### Observe thru signals
 
 `QOlm::QOlmBase` provide basic signal to react to `QObject` insert/remove/move operation.
 
@@ -262,7 +176,7 @@ But those signals are not very convenient to use as a end user. That's why `QOlm
 
 They are call when the model can safely be iterated. You can simply retrieve a correct pointer by using `qobject_cast<_Object*>(object)`.
 
-##### Function override observe.
+### Function override observe.
 
 Sometime it can be useful to do some processing before the whole world gets notify about our object operation. This method is only available if you define a custom list type.
 
@@ -282,34 +196,34 @@ public:
     }
 
 protected:
-    void onItemAboutToBeInserted(_Object* item, int row) override
+    void onObjectAboutToBeInserted(_Object* item, int row) override
     {
-        // Item is not yet inserted, do some preinsert operation on it.
+        // Object is not yet inserted, do some preinsert operation on it.
     }
-    void onItemInserted(_Object* item, int row) override
+    void onObjectInserted(_Object* item, int row) override
     {
-        // Item just got inserted, but no callback/signal have been called yet.
+        // Object just got inserted, but no callback/signal have been called yet.
     }
-    void onItemAboutToBeMoved(_Object* item, int src, int dest) override
+    void onObjectAboutToBeMoved(_Object* item, int src, int dest) override
     {
-        // Item haven't move yet, and no callback/signal have been called yet
+        // Object haven't move yet, and no callback/signal have been called yet
     }
-    void onItemMoved(_Object* item, int src, int dest) override
+    void onObjectMoved(_Object* item, int src, int dest) override
     {
-        // Item have been moved. No Callback/Signal have been called yet.
+        // Object have been moved. No Callback/Signal have been called yet.
     }
-    void onItemAboutToBeRemoved(_Object* item, int row) override
+    void onObjectAboutToBeRemoved(_Object* item, int row) override
     {
-        // Item isn't removed yet, and no callback/signal have been called yet
+        // Object isn't removed yet, and no callback/signal have been called yet
     }
-    void onItemRemoved(_Object* item, int row) override
+    void onObjectRemoved(_Object* item, int row) override
     {
-        // Item have been removed. Callback/Signal have been called
+        // Object have been removed. Callback/Signal have been called
     }
 };
 ```
 
-##### Observe with callback
+### Observe with callback
 
 Regular callback not dependent on qt can be used to handle insert/remove/move operation. We can't use signal with correct pointer type because qt doesn't support template moc.
 
@@ -317,19 +231,19 @@ Regular callback not dependent on qt can be used to handle insert/remove/move op
 FooList list;
 list.onInserted([](const InsertedCallbackArgs& foo)
 {
-	// foo->foo can be directly accessed
+    // foo->foo can be directly accessed
     // foo.object gives a _Object*
     // foo.index gives inserted object index
 });
 list.onRemoved([](const RemovedCallbackArgs& foo)
 {
-	// foo->foo can be directly accessed
+    // foo->foo can be directly accessed
     // foo.object gives a _Object*
     // foo.index gives removed object index
 });
 list.onMoved([](const MovedCallbackArgs& foo)
 {
-	// foo->foo can be directly accessed
+    // foo->foo can be directly accessed
     // foo.object gives a _Object*
     // foo.from gives previous object index
     // foo.to gives new object index
@@ -349,7 +263,7 @@ auto handleMove = list.onInserted([](const InsertedCallbackArgs& foo) {});
 list.stopListenMove(handleMove);
 ```
 
-#### Iterator
+## Iterator
 
 `QOlm` is compatible with modern iterator, you can simply do:
 
@@ -360,61 +274,3 @@ for(const auto foo : list)
     //foo->getFoo()
 }
 ```
-
-### Getting Started Qml
-
-The same api as the c++ work in qml. Every `Q_PROPERTY` are exposed as role, and another role `qtObject` allow to access the `QObject*`.
-
-For the following example to work `Foo` and `FooList` need to be registered to the qml system.
-
-```js
-import QtQuick 2.0
-import MyFoo 1.0
-
-ListView {
-    width: 180; height: 200
-    FooList { id: _fooList }
-
-    model: _fooList
-    delegate: Text
-    {
-        // Access role qtObject and cast it to our type
-        property Foo fooObj : model.qtObject
-        text: index + ": " +
-            fooObj.foo + // Access via casted object
-            + ", " +
-            foo // Access via role
-    }
-
-    Component.onCompleted:
-    {
-        _fooList.append(new Foo())
-        _fooList.insert(1, new Foo())
-        _fooList.prepend(new Foo())
-    }
-}
-```
-
-If you need to filter exposed roles, then use the constructor arguments. Same to set a display role.
-
-```cpp
-//QOlm(QObject* parent = nullptr,
-//   const QList<QByteArray> & exposedRoles = {},
-//   const QByteArray & displayRole = {})
-
-// The following code expose foo as exposedRoles, and foo as Qt::DisplayRole
-FooList list(nullptr, {"foo"}, "foo");
-```
-
-It is recommended to only expose role that are required for `QSortFilterProxyModel ` subclass. And use native signal to property for property that often change.
-
-## Todo
-
-- [ ] Turn examples into unit tests
-- [ ] Qml Example
-
-
-
-## Authors
-
-* [Olivier LDff](https://github.com/OlivierLDff)

@@ -11,7 +11,14 @@ class Foo : public QObject
     int _foo = 0;
 
 public:
-    Foo(QObject* parent = nullptr) : QObject(parent) {}
+    Foo(QObject* parent = nullptr) : QObject(parent)
+    {
+        //qDebug("Constructor");        
+    }
+    ~Foo()
+    {
+        //qDebug("Destructor");
+    }
     int getFoo() const { return _foo; }
     void setFoo(int foo)
     {

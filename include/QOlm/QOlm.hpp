@@ -379,10 +379,7 @@ public:
     void remove(_Object* object)
     {
         if(object != nullptr)
-        {
-            const int idx = _objects.indexOf(object);
-            remove(idx);
-        }
+            remove(indexOf(object));
     }
     void remove(const QList<_Object*>& objects)
     {

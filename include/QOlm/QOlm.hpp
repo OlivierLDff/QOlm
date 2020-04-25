@@ -376,25 +376,30 @@ public:
             objectMovedNotify(_objects.at(from), from, to);
         }
     }
-    void remove(_Object* item)
+    void remove(_Object* object)
     {
-        if(item != nullptr)
+        if(object != nullptr)
         {
-            const int idx = _objects.indexOf(item);
+            const int idx = _objects.indexOf(object);
             remove(idx);
         }
     }
-    void remove(int idx)
+    void remove(const QList<_Object*>& objects)
     {
-        if(idx >= 0 && idx < _objects.size())
+        for(const auto object: objects)
+            remove(object);
+    }
+    void remove(int index)
+    {
+        if(index >= 0 && index < _objects.size())
         {
-            objectAboutToBeRemovedNotify(_objects.at(idx), idx);
-            beginRemoveRows(noParent(), idx, idx);
-            _Object* item = _objects.takeAt(idx);
+            objectAboutToBeRemovedNotify(_objects.at(index), index);
+            beginRemoveRows(noParent(), index, index);
+            _Object* item = _objects.takeAt(index);
             dereferenceItem(item);
             updateCounter();
             endRemoveRows();
-            objectRemovedNotify(item, idx);
+            objectRemovedNotify(item, index);
         }
     }
     void clear() override final
@@ -458,7 +463,7 @@ public:
         else if(value.isQObject())
         {
             const auto qObj = value.toQObject();
-            _Object*   object = qobject_cast<_Object*>(qObj);
+            auto object = qobject_cast<_Object*>(qObj);
             remove(object);
         }
     }

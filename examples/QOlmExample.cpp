@@ -60,6 +60,11 @@ void removeExample()
     qInfo("function : Remove at 2");
     list.remove(2);
     qInfo("list     : %s", qPrintable(list.toString()));
+
+    // { }
+    qInfo("function : Remove at foo1 & foo2");
+    list.remove({&foo1, &foo2});
+    qInfo("list     : %s", qPrintable(list.toString()));
 }
 
 void moveExample()

@@ -2,31 +2,14 @@
 
 using namespace QOlm;
 
-QOlmBase::QOlmBase(QObject* parent) : QAbstractListModel(parent)
-{
-}
+QOlmBase::QOlmBase(QObject* parent) : QAbstractListModel(parent) {}
 
-int QOlmBase::size() const
-{
-    return count();
-}
+int QOlmBase::size() const { return count(); }
 
-int QOlmBase::length() const
-{
-    return count();
-}
+int QOlmBase::length() const { return count(); }
 
-bool QOlmBase::empty() const
-{
-    return count() == 0;
-}
+bool QOlmBase::empty() const { return count() == 0; }
 
-void QOlmBase::moveNext(const int index)
-{
-    moveDown(index);
-}
+void QOlmBase::moveNext(const int index) { moveDown(index); }
 
-void QOlmBase::movePrevious(const int index)
-{
-    moveUp(index);
-}
+void QOlmBase::movePrevious(const int index) { moveUp(index); }

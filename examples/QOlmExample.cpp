@@ -48,7 +48,7 @@ void removeExample()
     foo3.setFoo(3);
     Foo foo4;
     foo4.setFoo(4);
-    list.append({ &foo1, &foo2, &foo3, &foo4 });
+    list.append({&foo1, &foo2, &foo3, &foo4});
 
     qInfo("list     : %s", qPrintable(list.toString()));
 
@@ -79,7 +79,7 @@ void moveExample()
     foo3.setFoo(3);
     Foo foo4;
     foo4.setFoo(4);
-    list.append({ &foo1, &foo2, &foo3, &foo4 });
+    list.append({&foo1, &foo2, &foo3, &foo4});
 
     qInfo("list     : %s", qPrintable(list.toString()));
 

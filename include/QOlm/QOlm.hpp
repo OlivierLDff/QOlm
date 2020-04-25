@@ -41,22 +41,27 @@ public:
      * These name should never be used as Q_PROPERTY in general because they conflicts QML basics keywords.
      * @param[in]  displayRole   The display role. This is the role used to display the object/content of the object by default when no roles is specified.
      */
-    explicit QOlm(
-        QObject* parent = nullptr, const QList<QByteArray>& exposedRoles = {}, const QByteArray& displayRole = {}) :
+    explicit QOlm(QObject* parent = nullptr,
+        const QList<QByteArray>& exposedRoles = {},
+        const QByteArray& displayRole = {}) :
         QOlmBase(parent),
-        _count(0), _displayRoleName(displayRole), _metaObj(_Object::staticMetaObject)
+        _count(0), _displayRoleName(displayRole),
+        _metaObj(_Object::staticMetaObject)
     {
         // Keep a track of black list rolename that are not compatible with Qml, they should never be used
         static QSet<QByteArray> roleNamesBlacklist;
         if(roleNamesBlacklist.isEmpty())
         {
-            roleNamesBlacklist << QByteArrayLiteral("id") << QByteArrayLiteral("index") << QByteArrayLiteral("class")
-                               << QByteArrayLiteral("model") << QByteArrayLiteral("modelData");
+            roleNamesBlacklist
+                << QByteArrayLiteral("id") << QByteArrayLiteral("index")
+                << QByteArrayLiteral("class") << QByteArrayLiteral("model")
+                << QByteArrayLiteral("modelData");
         }
 
         // Set handler that handle every property changed
         static const char* HANDLER = "onItemPropertyChanged()";
-        _handler = QOlmBase::metaObject()->method(QOlmBase::metaObject()->indexOfMethod(HANDLER));
+        _handler = QOlmBase::metaObject()->method(
+            QOlmBase::metaObject()->indexOfMethod(HANDLER));
 
         // Force a display role the the role map
         if(!displayRole.isEmpty())
@@ -69,15 +74,17 @@ public:
         // Number of attribute declare with the Q_PROPERTY flags
         const int len = _metaObj.propertyCount();
         // For every property in the ItemType
-        for(int propertyIdx = 0, role = (baseRole() + 1); propertyIdx < len; propertyIdx++, role++)
+        for(int propertyIdx = 0, role = (baseRole() + 1); propertyIdx < len;
+            propertyIdx++, role++)
         {
-            QMetaProperty    metaProp = _metaObj.property(propertyIdx);
+            QMetaProperty metaProp = _metaObj.property(propertyIdx);
             const QByteArray propName = QByteArray(metaProp.name());
             // Only expose the property as a role if:
             // - It isn't blacklisted(id, index, class, model, modelData)
             // - When exposedRoles is empty we expose every property
             // - When exposedRoles isn't empty we only expose the property asked by the user
-            if(!roleNamesBlacklist.contains(propName) && (exposedRoles.empty() || exposedRoles.contains(propName)))
+            if(!roleNamesBlacklist.contains(propName) &&
+                (exposedRoles.empty() || exposedRoles.contains(propName)))
             {
                 _roles.insert(role, propName);
                 // If there is a notify signal associated with the Q_PROPERTY we keep a track of it for fast lookup
@@ -89,10 +96,13 @@ public:
             else if(roleNamesBlacklist.contains(propName))
             {
                 static const QString CLASS_NAME =
-                    (QStringLiteral("QOlm<") + _metaObj.className() + QStringLiteral(">"));
-                qWarning() << "Can't have" << propName << "as a role name in" << qPrintable(CLASS_NAME)
+                    (QStringLiteral("QOlm<") + _metaObj.className() +
+                        QStringLiteral(">"));
+                qWarning() << "Can't have" << propName << "as a role name in"
+                           << qPrintable(CLASS_NAME)
                            << ", because it's a blacklisted keywork in QML!. "
-                              "Please don't use any of the following words when declaring your Q_PROPERTY:(id, index, "
+                              "Please don't use any of the following words "
+                              "when declaring your Q_PROPERTY:(id, index, "
                               "class, model, modelData)";
             }
         }
@@ -100,11 +110,14 @@ public:
 
     // ──────── ABSTRACT MODEL OVERRIDE ──────────
 public:
-    bool setData(const QModelIndex& modelIndex, const QVariant& value, int role) override final
+    bool setData(const QModelIndex& modelIndex, const QVariant& value,
+        int role) override final
     {
-        bool             ret = false;
-        _Object*         item = at(modelIndex.row());
-        const QByteArray roleName = (role != Qt::DisplayRole ? _roles.value(role, emptyBA()) : _displayRoleName);
+        bool ret = false;
+        _Object* item = at(modelIndex.row());
+        const QByteArray roleName =
+            (role != Qt::DisplayRole ? _roles.value(role, emptyBA()) :
+                                       _displayRoleName);
         if(item != nullptr && role != baseRole() && !roleName.isEmpty())
             ret = item->setProperty(roleName, value);
         return ret;
@@ -112,19 +125,19 @@ public:
 
     QVariant data(const QModelIndex& modelIndex, int role) const override final
     {
-        QVariant         ret;
-        _Object*         item = at(modelIndex.row());
-        const QByteArray roleName = (role != Qt::DisplayRole ? _roles.value(role, emptyBA()) : _displayRoleName);
+        QVariant ret;
+        _Object* item = at(modelIndex.row());
+        const QByteArray roleName =
+            (role != Qt::DisplayRole ? _roles.value(role, emptyBA()) :
+                                       _displayRoleName);
         if(item != nullptr && !roleName.isEmpty())
-            ret.setValue(
-                role != baseRole() ? item->property(roleName) : QVariant::fromValue(static_cast<QObject*>(item)));
+            ret.setValue(role != baseRole() ?
+                             item->property(roleName) :
+                             QVariant::fromValue(static_cast<QObject*>(item)));
         return ret;
     }
 
-    QHash<int, QByteArray> roleNames() const final
-    {
-        return _roles;
-    }
+    QHash<int, QByteArray> roleNames() const final { return _roles; }
 
     // ──────── ABSTRACT MODEL PRIVATE ──────────
 protected:
@@ -159,9 +172,11 @@ protected:
             if(!item->parent())
                 item->setParent(this);
 
-            for(QHash<int, int>::const_iterator it = _signalIdxToRole.constBegin(); it != _signalIdxToRole.constEnd();
-                ++it)
-                connect(item, item->metaObject()->method(it.key()), this, _handler, Qt::UniqueConnection);
+            for(QHash<int, int>::const_iterator it =
+                    _signalIdxToRole.constBegin();
+                it != _signalIdxToRole.constEnd(); ++it)
+                connect(item, item->metaObject()->method(it.key()), this,
+                    _handler, Qt::UniqueConnection);
         }
     }
     void dereferenceItem(_Object* item)
@@ -179,14 +194,15 @@ protected:
     }
     void onItemPropertyChanged() override final
     {
-        _Object*  item = qobject_cast<_Object*>(sender());
+        _Object* item = qobject_cast<_Object*>(sender());
         const int row = _objects.indexOf(item);
         const int sig = senderSignalIndex();
         const int role = _signalIdxToRole.value(sig, -1);
         if(row >= 0 && role >= 0)
         {
-            const QModelIndex index = QAbstractListModel::index(row, 0, noParent());
-            QVector<int>      rolesList;
+            const QModelIndex index =
+                QAbstractListModel::index(row, 0, noParent());
+            QVector<int> rolesList;
             rolesList.append(role);
 
             if(_roles.value(role) == _displayRoleName)
@@ -207,29 +223,14 @@ protected:
     // ──────── ITERATOR ──────────
 public:
     using const_iterator = typename QList<_Object*>::const_iterator;
-    const_iterator begin() const
-    {
-        return _objects.begin();
-    }
-    const_iterator end() const
-    {
-        return _objects.end();
-    }
-    const_iterator constBegin() const
-    {
-        return _objects.constBegin();
-    }
-    const_iterator constEnd() const
-    {
-        return _objects.constEnd();
-    }
+    const_iterator begin() const { return _objects.begin(); }
+    const_iterator end() const { return _objects.end(); }
+    const_iterator constBegin() const { return _objects.constBegin(); }
+    const_iterator constEnd() const { return _objects.constEnd(); }
 
     // ──────── C++ API ──────────
 public:
-    _Object* at(int index) const
-    {
-        return get(index);
-    }
+    _Object* at(int index) const { return get(index); }
     _Object* get(int index) const
     {
         _Object* ret = nullptr;
@@ -248,19 +249,10 @@ public:
     {
         return _roles.key(name, -1);
     }
-    int count() const final
-    {
-        return _count;
-    }
+    int count() const final { return _count; }
 
-    bool contains(_Object* object) const
-    {
-        return _objects.contains(object);
-    }
-    int indexOf(_Object* object) const
-    {
-        return _objects.indexOf(object);
-    }
+    bool contains(_Object* object) const { return _objects.contains(object); }
+    int indexOf(_Object* object) const { return _objects.indexOf(object); }
     void append(_Object* object)
     {
         if(object != nullptr)
@@ -313,10 +305,7 @@ public:
             beginInsertRows(noParent(), pos, pos + itemList.count() - 1);
             _objects.reserve(_objects.count() + itemList.count());
             _objects.append(itemList);
-            for(const auto item: *this)
-            {
-                referenceItem(item);
-            }
+            for(const auto item: *this) { referenceItem(item); }
             updateCounter();
             endInsertRows();
             for(int i = 0; i < itemList.count(); ++i)
@@ -367,10 +356,12 @@ public:
     }
     void move(int from, int to) override final
     {
-        if(from != to && from >= 0 && to >= 0 && from < _objects.size() && to < _objects.size())
+        if(from != to && from >= 0 && to >= 0 && from < _objects.size() &&
+            to < _objects.size())
         {
             objectAboutToBeMovedNotify(_objects.at(from), from, to);
-            beginMoveRows(noParent(), from, from, noParent(), (from < to ? to + 1 : to));
+            beginMoveRows(
+                noParent(), from, from, noParent(), (from < to ? to + 1 : to));
             _objects.move(from, to);
             endMoveRows();
             objectMovedNotify(_objects.at(from), from, to);
@@ -383,8 +374,7 @@ public:
     }
     void remove(const QList<_Object*>& objects)
     {
-        for(const auto object: objects)
-            remove(object);
+        for(const auto object: objects) remove(object);
     }
     void remove(int index)
     {
@@ -419,20 +409,11 @@ public:
                 objectRemovedNotify(tempList.at(i), i);
         }
     }
-    _Object* first() const
-    {
-        return _objects.first();
-    }
+    _Object* first() const { return _objects.first(); }
 
-    _Object* last() const
-    {
-        return _objects.last();
-    }
+    _Object* last() const { return _objects.last(); }
 
-    const QList<_Object*>& toList() const
-    {
-        return _objects;
-    }
+    const QList<_Object*>& toList() const { return _objects; }
 
     // ──────── QML OVERRIDE API ──────────
 public:
@@ -475,10 +456,7 @@ public:
         return indexOf(qobject_cast<_Object*>(item));
     }
 
-    int indexOf(const QString& uid) const
-    {
-        return indexOf(get(uid));
-    }
+    int indexOf(const QString& uid) const { return indexOf(get(uid)); }
 
     /** \brief Move index to index-1 */
     void moveUp(const int index) override final
@@ -490,9 +468,9 @@ public:
     /** \brief Move index to index+1 */
     void moveDown(const int index) override final
     {
-        if(count() && // There is a least one entry
-            index >= 0 && // We can be from the first
-            index < (count() - 1) // To the last one minus 1
+        if(count() &&  // There is a least one entry
+            index >= 0 &&  // We can be from the first
+            index < (count() - 1)  // To the last one minus 1
         )
             return moveUp(index + 1);
     }
@@ -534,24 +512,17 @@ private:
 public:
     struct _BaseCallbackArgs
     {
-        explicit _BaseCallbackArgs(_Object* object) : object(object)
-        {
-        }
+        explicit _BaseCallbackArgs(_Object* object) : object(object) {}
 
         _Object* object = nullptr;
 
-        _Object* operator->() const
-        {
-            return object;
-        }
-        operator _Object*() const
-        {
-            return object;
-        }
+        _Object* operator->() const { return object; }
+        operator _Object*() const { return object; }
     };
     struct InsertedCallbackArgs : _BaseCallbackArgs
     {
-        InsertedCallbackArgs(_Object* object, int index) : _BaseCallbackArgs(object), index(index)
+        InsertedCallbackArgs(_Object* object, int index) :
+            _BaseCallbackArgs(object), index(index)
         {
         }
 
@@ -561,7 +532,8 @@ public:
 
     struct MovedCallbackArgs : _BaseCallbackArgs
     {
-        MovedCallbackArgs(_Object* object, int from, int to) : _BaseCallbackArgs(object), from(from), to(to)
+        MovedCallbackArgs(_Object* object, int from, int to) :
+            _BaseCallbackArgs(object), from(from), to(to)
         {
         }
 
@@ -569,29 +541,38 @@ public:
         int to = -1;
     };
 
-    using InsertedCallbackList = eventpp::CallbackList<void(const InsertedCallbackArgs&)>;
-    using RemovedCallbackList = eventpp::CallbackList<void(const RemovedCallbackArgs&)>;
-    using MovedCallbackList = eventpp::CallbackList<void(const MovedCallbackArgs&)>;
+    using InsertedCallbackList =
+        eventpp::CallbackList<void(const InsertedCallbackArgs&)>;
+    using RemovedCallbackList =
+        eventpp::CallbackList<void(const RemovedCallbackArgs&)>;
+    using MovedCallbackList =
+        eventpp::CallbackList<void(const MovedCallbackArgs&)>;
 
     struct Callbacks
     {
         InsertedCallbackList inserted;
-        RemovedCallbackList  removed;
-        MovedCallbackList    moved;
+        RemovedCallbackList removed;
+        MovedCallbackList moved;
     };
 
 public:
-    typename InsertedCallbackList::Handle onInserted(std::function<void(const InsertedCallbackArgs&)> callback)
+    typename InsertedCallbackList::Handle onInserted(
+        std::function<void(const InsertedCallbackArgs&)> callback)
     {
-        return callback ? _callbacks.inserted.append(callback) : InsertedCallbackList::Handle();
+        return callback ? _callbacks.inserted.append(callback) :
+                          InsertedCallbackList::Handle();
     }
-    typename RemovedCallbackList::Handle onRemoved(std::function<void(const RemovedCallbackArgs&)> callback)
+    typename RemovedCallbackList::Handle onRemoved(
+        std::function<void(const RemovedCallbackArgs&)> callback)
     {
-        return callback ? _callbacks.removed.append(callback) : RemovedCallbackList::Handle();
+        return callback ? _callbacks.removed.append(callback) :
+                          RemovedCallbackList::Handle();
     }
-    typename MovedCallbackList::Handle onMoved(std::function<void(const MovedCallbackArgs&)> callback)
+    typename MovedCallbackList::Handle onMoved(
+        std::function<void(const MovedCallbackArgs&)> callback)
     {
-        return callback ? _callbacks.moved.append(callback) : MovedCallbackList::Handle();
+        return callback ? _callbacks.moved.append(callback) :
+                          MovedCallbackList::Handle();
     }
 
     void stopListenInsert(typename InsertedCallbackList::Handle h)
@@ -608,35 +589,23 @@ public:
     }
 
 protected:
-    virtual void onObjectAboutToBeInserted(_Object* object, int index)
-    {
-    }
-    virtual void onObjectInserted(_Object* object, int index)
-    {
-    }
-    virtual void onObjectAboutToBeMoved(_Object* object, int src, int dest)
-    {
-    }
-    virtual void onObjectMoved(_Object* object, int src, int dest)
-    {
-    }
-    virtual void onObjectAboutToBeRemoved(_Object* object, int index)
-    {
-    }
-    virtual void onObjectRemoved(_Object* object, int index)
-    {
-    }
+    virtual void onObjectAboutToBeInserted(_Object* object, int index) {}
+    virtual void onObjectInserted(_Object* object, int index) {}
+    virtual void onObjectAboutToBeMoved(_Object* object, int src, int dest) {}
+    virtual void onObjectMoved(_Object* object, int src, int dest) {}
+    virtual void onObjectAboutToBeRemoved(_Object* object, int index) {}
+    virtual void onObjectRemoved(_Object* object, int index) {}
 
     // ──────── ATTRIBUTES ──────────
 private:
-    int                    _count;
-    QByteArray             _displayRoleName;
-    QMetaObject            _metaObj;
-    QMetaMethod            _handler;
+    int _count;
+    QByteArray _displayRoleName;
+    QMetaObject _metaObj;
+    QMetaMethod _handler;
     QHash<int, QByteArray> _roles;
-    QHash<int, int>        _signalIdxToRole;
-    QList<_Object*>        _objects;
-    Callbacks              _callbacks;
+    QHash<int, int> _signalIdxToRole;
+    QList<_Object*> _objects;
+    Callbacks _callbacks;
 };
 
 }

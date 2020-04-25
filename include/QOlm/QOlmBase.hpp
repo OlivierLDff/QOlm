@@ -106,7 +106,7 @@ public Q_SLOTS:
     virtual bool contains(QObject* object) const = 0;
 
     /** \brief Get the role id of name, -1 if role not found */
-    virtual int roleForName(const QByteArray & name) const = 0;
+    virtual int roleForName(const QByteArray& name) const = 0;
 
     /**
      * \brief Inserts value at the end of the list.

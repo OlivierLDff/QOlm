@@ -121,7 +121,7 @@ else()
 endif()
 
 target_include_directories(${QOLM_TARGET} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_compile_features(${QOLM_TARGET} PUBLIC cxx_std_11)
+target_compile_features(${QOLM_TARGET} PUBLIC cxx_std_17)
 target_link_libraries(${QOLM_TARGET} PUBLIC eventpp Qt5::Core Qt5::Qml)
 
 set_target_properties(${QOLM_TARGET} PROPERTIES FOLDER ${QOLM_FOLDER_PREFIX})

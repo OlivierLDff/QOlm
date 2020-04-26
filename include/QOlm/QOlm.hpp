@@ -560,19 +560,19 @@ public:
         std::function<void(const InsertedCallbackArgs&)> callback)
     {
         return callback ? _callbacks.inserted.append(callback) :
-                          InsertedCallbackList::Handle();
+                          typename InsertedCallbackList::Handle();
     }
     typename RemovedCallbackList::Handle onRemoved(
         std::function<void(const RemovedCallbackArgs&)> callback)
     {
         return callback ? _callbacks.removed.append(callback) :
-                          RemovedCallbackList::Handle();
+                          typename RemovedCallbackList::Handle();
     }
     typename MovedCallbackList::Handle onMoved(
         std::function<void(const MovedCallbackArgs&)> callback)
     {
         return callback ? _callbacks.moved.append(callback) :
-                          MovedCallbackList::Handle();
+                          typename MovedCallbackList::Handle();
     }
 
     void stopListenInsert(typename InsertedCallbackList::Handle h)

@@ -14,4 +14,4 @@ macro(objlist_example_add EXAMPLE_NAME)
 endmacro()
 
 set(QOLM_EXAMPLES_FOLDER ${CMAKE_CURRENT_SOURCE_DIR})
-objlist_example_add(QOlmExample)
+objlist_example_add(Example)

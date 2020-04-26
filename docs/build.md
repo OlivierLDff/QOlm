@@ -74,8 +74,8 @@ The option `QOLM_ENABLE_EXAMPLES` should be turned on.
 
 ```bash
 cmake -DQOLM_ENABLE_EXAMPLES=ON ..
-cmake --build . --target QOlm_Examples --config "Release"
-./examples/QOlm_Examples
+cmake --build . --target QOlm_Example --config "Release"
+./examples/QOlm_Example
 ```
 
 ## 🚩 Additional CMake flags

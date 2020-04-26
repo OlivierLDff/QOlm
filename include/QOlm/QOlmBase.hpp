@@ -6,7 +6,7 @@
 #include <QAbstractListModel>
 #include <QJSValue>
 
-namespace QOlm {
+namespace qolm {
 
 class QOLM_API_ QOlmBase : public QAbstractListModel
 {

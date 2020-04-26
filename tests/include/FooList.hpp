@@ -4,7 +4,7 @@
 #include <QOlm/QOlm.hpp>
 #include <Foo.hpp>
 
-class FooList : public QOlm::QOlm<Foo>
+class FooList : public qolm::QOlm<Foo>
 {
     Q_OBJECT
 };

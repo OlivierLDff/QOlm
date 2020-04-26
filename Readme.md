@@ -1,6 +1,6 @@
 # QOlm
 
-Bring `QOlm::QOlm` data type based on `QAbstractListModel` that provide a list of `QObject` based class to **js** and **c++**. The goal of this list is to dynamically update views by reacting to **insert**, **remove**, **move** operations.
+Bring `qolm::QOlm` data type based on `QAbstractListModel` that provide a list of `QObject` based class to **js** and **c++**. The goal of this list is to dynamically update views by reacting to **insert**, **remove**, **move** operations.
 
 ## Overview
 
@@ -114,17 +114,17 @@ Then use a `QOlm` based object with class inheritance or as a typedef.
 #include <QOlm/QOlm.hpp>
 
 // Declare type
-using FooList = QOlm::QOlm<Foo>;
+using FooList = qolm::QOlm<Foo>;
 
 // Or create custom class
-class FooList : public QOlm::QOlm<Foo>
+class FooList : public qolm::QOlm<Foo>
 {
     Q_OBJECT
 public:
     Foo(QObject* parent = nullptr,
         const QList<QByteArray> & exposedRoles = {},
         const QByteArray & displayRole = {}):
-    QOlm::QOlm<Foo>::(parent, exposedRoles, displayRole)
+    qolm::QOlm<Foo>::(parent, exposedRoles, displayRole)
     {
     }
 };
@@ -241,7 +241,7 @@ list.remove(0);
 
 ##### Observe as QAbstractItemModel
 
-The `QOlm::QOlm` derived object can be observe for insertion and deletion like any qt model.
+The `qolm::QOlm` derived object can be observe for insertion and deletion like any qt model.
 
 * **[rowsAboutToBeInserted](https://doc.qt.io/qt-5/qabstractitemmodel.html#rowsAboutToBeInserted)**
 * **[rowsAboutToBeMoved](https://doc.qt.io/qt-5/qabstractitemmodel.html#rowsAboutToBeMoved)**
@@ -254,7 +254,7 @@ But those signals are not very convenient to use as a end user. That's why `QOlm
 
 ##### Observe thru signals
 
-`QOlm::QOlmBase` provide basic signal to react to `QObject` insert/remove/move operation.
+`qolm::QOlmBase` provide basic signal to react to `QObject` insert/remove/move operation.
 
 * `onObjectInserted(QObject* object, int index)`
 * `onObjectRemoved(QObject* object, int index)`
@@ -270,7 +270,7 @@ Sometime it can be useful to do some processing before the whole world gets noti
 #include <Foo.hpp>
 #include <QOlm/QOlm.hpp>
 
-class FooList : public QOlm::QOlm<Foo>
+class FooList : public qolm::QOlm<Foo>
 {
     Q_OBJECT
 public:

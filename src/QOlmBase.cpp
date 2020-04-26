@@ -1,6 +1,6 @@
 #include <QOlm/QOlmBase.hpp>
 
-using namespace QOlm;
+using namespace qolm;
 
 QOlmBase::QOlmBase(QObject* parent) : QAbstractListModel(parent) {}
 

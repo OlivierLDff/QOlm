@@ -34,7 +34,7 @@ Q_SIGNALS:
     void fooChanged();
 };
 
-class FooList : public QOlm::QOlm<Foo>
+class FooList : public qolm::QOlm<Foo>
 {
     Q_OBJECT
 public:

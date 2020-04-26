@@ -17,7 +17,7 @@
 
 #include <eventpp/callbacklist.h>
 
-namespace QOlm {
+namespace qolm {
 
 template<class _Object>
 class QOlm : public QOlmBase

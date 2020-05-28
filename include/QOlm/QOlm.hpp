@@ -216,7 +216,7 @@ protected:
         if(_count != _objects.count())
         {
             _count = _objects.count();
-            Q_EMIT countChanged();
+            Q_EMIT countChanged(_count);
         }
     }
 

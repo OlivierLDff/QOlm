@@ -173,7 +173,7 @@ protected Q_SLOTS:
 
     // ──────── SIGNALS ──────────
 Q_SIGNALS:
-    void countChanged();
+    void countChanged(int count);
 
     void objectInserted(QObject* object, int index);
     void objectRemoved(QObject* object, int index);

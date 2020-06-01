@@ -71,7 +71,7 @@ public Q_SLOTS:
      *
      * \code
      * // ...
-     * const myObject = myModel.getQtObject(8);
+     * const myObject = myModel.get(8);
      * myObject.foo = 10
      * // ...
      * \endcode
@@ -87,7 +87,7 @@ public Q_SLOTS:
      *
      * \code
      * // ...
-     * const index = getIndex.getQtObject(myObject);
+     * const index = getIndex.get(myObject);
      * // index == 8
      * // ...
      * \endcode

@@ -84,8 +84,11 @@ message(STATUS "---------------- DONE WITH OPTIONS. -----------------")
 
 # ───── DEPENDENCIES ─────
 
-find_package(Qt5Core CONFIG REQUIRED NO_CMAKE_SYSTEM_PATH)
-find_package(Qt5Qml  CONFIG REQUIRED NO_CMAKE_SYSTEM_PATH)
+find_package(Qt5 REQUIRED COMPONENTS
+  Core
+  Gui
+  Qml
+)
 
 include(FetchContent)
 

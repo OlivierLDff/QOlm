@@ -4,6 +4,7 @@
 #include <QOlm/Export.hpp>
 
 #include <QAbstractListModel>
+#include <QQmlListProperty>
 #include <QJSValue>
 
 namespace qolm {
@@ -95,7 +96,7 @@ public Q_SLOTS:
      * \param object pointer to the qtObject
      * \return valid index from 0 to (count-1) if object is found, otherwise -1.
      */
-    virtual int indexOf(QObject* object) const = 0;
+    virtual int indexOf(QJSValue object) const = 0;
 
     /**
      * \brief get if an object is present inside the model
@@ -103,7 +104,7 @@ public Q_SLOTS:
      * \param object pointer to the object to look for
      * \return true if object is present in model
      */
-    virtual bool contains(QObject* object) const = 0;
+    virtual bool contains(QJSValue object) const = 0;
 
     /** \brief Get the role id of name, -1 if role not found */
     virtual int roleForName(const QByteArray& name) const = 0;
@@ -117,7 +118,7 @@ public Q_SLOTS:
      * its internal buffer to allow for fast growth at both ends of the list.
      * This function match qt api
      */
-    virtual void append(QObject* object) = 0;
+    virtual void append(QJSValue object) = 0;
 
     /**
      * \brief Inserts value at the beginning of the list.
@@ -127,14 +128,14 @@ public Q_SLOTS:
      * on both sides of its internal buffer to allow for fast growth at
      * both ends of the list.
      */
-    virtual void prepend(QObject* item) = 0;
+    virtual void prepend(QJSValue item) = 0;
 
     /**
      * \brief Inserts value at index position i in the list.
      * If i <= 0, the value is prepended to the list.
      * If i >= size(), the value is appended to the list.
      */
-    virtual void insert(int index, QObject* item) = 0;
+    virtual void insert(int index, QJSValue item) = 0;
 
     /**
      * \brief Can be called to remove a QObject* or directly using index
@@ -167,6 +168,9 @@ public Q_SLOTS:
     void moveNext(const int index);
     void movePrevious(const int index);
 
+public:
+    QQmlListProperty<QObject> defaultChildren();
+
     // ──────── INTERNAL CALLBACK ──────────
 protected Q_SLOTS:
     virtual void onItemPropertyChanged() = 0;
@@ -178,6 +182,27 @@ Q_SIGNALS:
     void objectInserted(QObject* object, int index);
     void objectRemoved(QObject* object, int index);
     void objectMoved(QObject* object, int from, int to);
+
+    // ──────── DEFAULT CHILDREN ──────────
+public:
+    Q_PROPERTY(QQmlListProperty<QObject> defaultChildren READ defaultChildren)
+    Q_CLASSINFO("DefaultProperty", "defaultChildren")
+
+protected:
+    virtual void appendDefaultChild(QObject* child) = 0;
+    virtual int defaultChildrenCount() = 0;
+    virtual QObject* defaultChild(int index) = 0;
+    virtual void clearDefaultChildren() = 0;
+    virtual void replaceDefaultChild(int index, QObject* child) = 0;
+    virtual void removeLastChild() = 0;
+
+private:
+    static void appendDefaultChild(QQmlListProperty<QObject>* list, QObject* child);
+    static int defaultChildrenCount(QQmlListProperty<QObject>* list);
+    static QObject* defaultChild(QQmlListProperty<QObject>* list, int index);
+    static void clearDefaultChildren(QQmlListProperty<QObject>* list);
+    static void replaceDefaultChild(QQmlListProperty<QObject>* list, int index, QObject* child);
+    static void removeLastChild(QQmlListProperty<QObject>* list);
 };
 
 }

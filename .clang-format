@@ -9,6 +9,7 @@ AlignConsecutiveDeclarations: false
 AlignConsecutiveMacros: false
 AlignEscapedNewlines: Right
 AlignOperands: true
+ColumnLimit: 120
 AlignTrailingComments: false
 AllowAllArgumentsOnNextLine: false
 AllowAllConstructorInitializersOnNextLine: false
@@ -19,6 +20,7 @@ AllowShortLoopsOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: Never
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
+AllowShortCaseLabelsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: true
 BinPackArguments: true
 BinPackParameters: true
@@ -53,7 +55,7 @@ DeriveLineEnding: true
 DerivePointerAlignment: true
 IncludeBlocks: Regroup
 IndentCaseBlocks: false
-IndentCaseLabels: true
+IndentCaseLabels: false
 IndentWidth: 4
 IndentWrappedFunctionNames: true
 KeepEmptyLinesAtTheStartOfBlocks: false

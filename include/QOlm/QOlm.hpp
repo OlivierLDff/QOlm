@@ -41,27 +41,22 @@ public:
      * These name should never be used as Q_PROPERTY in general because they conflicts QML basics keywords.
      * @param[in]  displayRole   The display role. This is the role used to display the object/content of the object by default when no roles is specified.
      */
-    explicit QOlm(QObject* parent = nullptr,
-        const QList<QByteArray>& exposedRoles = {},
-        const QByteArray& displayRole = {}) :
+    explicit QOlm(
+        QObject* parent = nullptr, const QList<QByteArray>& exposedRoles = {}, const QByteArray& displayRole = {}) :
         QOlmBase(parent),
-        _count(0), _displayRoleName(displayRole),
-        _metaObj(_Object::staticMetaObject)
+        _count(0), _displayRoleName(displayRole), _metaObj(_Object::staticMetaObject)
     {
         // Keep a track of black list rolename that are not compatible with Qml, they should never be used
         static QSet<QByteArray> roleNamesBlacklist;
         if(roleNamesBlacklist.isEmpty())
         {
-            roleNamesBlacklist
-                << QByteArrayLiteral("id") << QByteArrayLiteral("index")
-                << QByteArrayLiteral("class") << QByteArrayLiteral("model")
-                << QByteArrayLiteral("modelData");
+            roleNamesBlacklist << QByteArrayLiteral("id") << QByteArrayLiteral("index") << QByteArrayLiteral("class")
+                               << QByteArrayLiteral("model") << QByteArrayLiteral("modelData");
         }
 
         // Set handler that handle every property changed
         static const char* HANDLER = "onItemPropertyChanged()";
-        _handler = QOlmBase::metaObject()->method(
-            QOlmBase::metaObject()->indexOfMethod(HANDLER));
+        _handler = QOlmBase::metaObject()->method(QOlmBase::metaObject()->indexOfMethod(HANDLER));
 
         // Force a display role the the role map
         if(!displayRole.isEmpty())
@@ -74,8 +69,7 @@ public:
         // Number of attribute declare with the Q_PROPERTY flags
         const int len = _metaObj.propertyCount();
         // For every property in the ItemType
-        for(int propertyIdx = 0, role = (baseRole() + 1); propertyIdx < len;
-            propertyIdx++, role++)
+        for(int propertyIdx = 0, role = (baseRole() + 1); propertyIdx < len; propertyIdx++, role++)
         {
             QMetaProperty metaProp = _metaObj.property(propertyIdx);
             const QByteArray propName = QByteArray(metaProp.name());
@@ -83,8 +77,7 @@ public:
             // - It isn't blacklisted(id, index, class, model, modelData)
             // - When exposedRoles is empty we expose every property
             // - When exposedRoles isn't empty we only expose the property asked by the user
-            if(!roleNamesBlacklist.contains(propName) &&
-                (exposedRoles.empty() || exposedRoles.contains(propName)))
+            if(!roleNamesBlacklist.contains(propName) && (exposedRoles.empty() || exposedRoles.contains(propName)))
             {
                 _roles.insert(role, propName);
                 // If there is a notify signal associated with the Q_PROPERTY we keep a track of it for fast lookup
@@ -95,11 +88,7 @@ public:
             }
             else if(roleNamesBlacklist.contains(propName))
             {
-                static const QString CLASS_NAME =
-                    (QStringLiteral("QOlm<") + _metaObj.className() +
-                        QStringLiteral(">"));
-                qWarning() << "Can't have" << propName << "as a role name in"
-                           << qPrintable(CLASS_NAME)
+                qWarning() << "Can't have" << propName << "as a role name in" << qPrintable(templateClassName())
                            << ", because it's a blacklisted keywork in QML!. "
                               "Please don't use any of the following words "
                               "when declaring your Q_PROPERTY:(id, index, "
@@ -108,16 +97,20 @@ public:
         }
     }
 
+public:
+    QString templateClassName() const
+    {
+        static const QString CLASS_NAME = (QStringLiteral("QOlm<") + _metaObj.className() + QStringLiteral(">"));
+        return CLASS_NAME;
+    }
+
     // ──────── ABSTRACT MODEL OVERRIDE ──────────
 public:
-    bool setData(const QModelIndex& modelIndex, const QVariant& value,
-        int role) override final
+    bool setData(const QModelIndex& modelIndex, const QVariant& value, int role) override final
     {
         bool ret = false;
         _Object* item = at(modelIndex.row());
-        const QByteArray roleName =
-            (role != Qt::DisplayRole ? _roles.value(role, emptyBA()) :
-                                       _displayRoleName);
+        const QByteArray roleName = (role != Qt::DisplayRole ? _roles.value(role, emptyBA()) : _displayRoleName);
         if(item != nullptr && role != baseRole() && !roleName.isEmpty())
             ret = item->setProperty(roleName, value);
         return ret;
@@ -127,13 +120,10 @@ public:
     {
         QVariant ret;
         _Object* item = at(modelIndex.row());
-        const QByteArray roleName =
-            (role != Qt::DisplayRole ? _roles.value(role, emptyBA()) :
-                                       _displayRoleName);
+        const QByteArray roleName = (role != Qt::DisplayRole ? _roles.value(role, emptyBA()) : _displayRoleName);
         if(item != nullptr && !roleName.isEmpty())
-            ret.setValue(role != baseRole() ?
-                             item->property(roleName) :
-                             QVariant::fromValue(static_cast<QObject*>(item)));
+            ret.setValue(
+                role != baseRole() ? item->property(roleName) : QVariant::fromValue(static_cast<QObject*>(item)));
         return ret;
     }
 
@@ -172,11 +162,9 @@ protected:
             if(!item->parent())
                 item->setParent(this);
 
-            for(QHash<int, int>::const_iterator it =
-                    _signalIdxToRole.constBegin();
-                it != _signalIdxToRole.constEnd(); ++it)
-                connect(item, item->metaObject()->method(it.key()), this,
-                    _handler, Qt::UniqueConnection);
+            for(QHash<int, int>::const_iterator it = _signalIdxToRole.constBegin(); it != _signalIdxToRole.constEnd();
+                ++it)
+                connect(item, item->metaObject()->method(it.key()), this, _handler, Qt::UniqueConnection);
         }
     }
     void dereferenceItem(_Object* item)
@@ -200,8 +188,7 @@ protected:
         const int role = _signalIdxToRole.value(sig, -1);
         if(row >= 0 && role >= 0)
         {
-            const QModelIndex index =
-                QAbstractListModel::index(row, 0, noParent());
+            const QModelIndex index = QAbstractListModel::index(row, 0, noParent());
             QVector<int> rolesList;
             rolesList.append(role);
 
@@ -245,10 +232,7 @@ public:
         return get(i);
     }
 
-    int roleForName(const QByteArray& name) const final
-    {
-        return _roles.key(name, -1);
-    }
+    int roleForName(const QByteArray& name) const final { return _roles.key(name, -1); }
     int count() const final { return _count; }
 
     bool contains(_Object* object) const { return _objects.contains(object); }
@@ -299,8 +283,7 @@ public:
         if(!itemList.isEmpty())
         {
             const int pos = _objects.count();
-            for(int i = 0; i < itemList.count(); ++i)
-                objectAboutToBeInsertedNotify(itemList.at(i), i + pos);
+            for(int i = 0; i < itemList.count(); ++i) objectAboutToBeInsertedNotify(itemList.at(i), i + pos);
 
             beginInsertRows(noParent(), pos, pos + itemList.count() - 1);
             _objects.reserve(_objects.count() + itemList.count());
@@ -308,20 +291,18 @@ public:
             for(const auto item: *this) { referenceItem(item); }
             updateCounter();
             endInsertRows();
-            for(int i = 0; i < itemList.count(); ++i)
-                objectInsertedNotify(itemList.at(i), i + pos);
+            for(int i = 0; i < itemList.count(); ++i) objectInsertedNotify(itemList.at(i), i + pos);
         }
     }
     void prepend(const QList<_Object*>& itemList)
     {
         if(!itemList.isEmpty())
         {
-            for(int i = 0; i < itemList.count(); ++i)
-                objectAboutToBeInsertedNotify(itemList.at(i), i);
+            for(int i = 0; i < itemList.count(); ++i) objectAboutToBeInsertedNotify(itemList.at(i), i);
             beginInsertRows(noParent(), 0, itemList.count() - 1);
             _objects.reserve(_objects.count() + itemList.count());
             int offset = 0;
-            for(const auto item: *this)
+            for(const auto item: itemList)
             {
                 _objects.insert(offset, item);
                 referenceItem(item);
@@ -329,20 +310,18 @@ public:
             }
             updateCounter();
             endInsertRows();
-            for(int i = 0; i < itemList.count(); ++i)
-                objectInsertedNotify(itemList.at(i), i);
+            for(int i = 0; i < itemList.count(); ++i) objectInsertedNotify(itemList.at(i), i);
         }
     }
     void insert(int idx, const QList<_Object*>& itemList)
     {
         if(!itemList.isEmpty())
         {
-            for(int i = 0; i < itemList.count(); ++i)
-                objectAboutToBeInsertedNotify(itemList.at(i), i + idx);
+            for(int i = 0; i < itemList.count(); ++i) objectAboutToBeInsertedNotify(itemList.at(i), i + idx);
             beginInsertRows(noParent(), idx, idx + itemList.count() - 1);
             _objects.reserve(_objects.count() + itemList.count());
             int offset = 0;
-            for(const auto item: *this)
+            for(const auto item: itemList)
             {
                 _objects.insert(idx + offset, item);
                 referenceItem(item);
@@ -350,18 +329,15 @@ public:
             }
             updateCounter();
             endInsertRows();
-            for(int i = 0; i < itemList.count(); ++i)
-                objectInsertedNotify(itemList.at(i), i + idx);
+            for(int i = 0; i < itemList.count(); ++i) objectInsertedNotify(itemList.at(i), i + idx);
         }
     }
     void move(int from, int to) override final
     {
-        if(from != to && from >= 0 && to >= 0 && from < _objects.size() &&
-            to < _objects.size())
+        if(from != to && from >= 0 && to >= 0 && from < _objects.size() && to < _objects.size())
         {
             objectAboutToBeMovedNotify(_objects.at(from), from, to);
-            beginMoveRows(
-                noParent(), from, from, noParent(), (from < to ? to + 1 : to));
+            beginMoveRows(noParent(), from, from, noParent(), (from < to ? to + 1 : to));
             _objects.move(from, to);
             endMoveRows();
             objectMovedNotify(_objects.at(from), from, to);
@@ -394,8 +370,7 @@ public:
         if(!_objects.isEmpty())
         {
             QList<_Object*> tempList;
-            for(int i = 0; i < _objects.count(); ++i)
-                objectAboutToBeRemovedNotify(_objects.at(i), i);
+            for(int i = 0; i < _objects.count(); ++i) objectAboutToBeRemovedNotify(_objects.at(i), i);
             beginRemoveRows(noParent(), 0, _objects.count() - 1);
             for(const auto item: *this)
             {
@@ -405,8 +380,7 @@ public:
             _objects.clear();
             updateCounter();
             endRemoveRows();
-            for(int i = 0; i < tempList.count(); ++i)
-                objectRemovedNotify(tempList.at(i), i);
+            for(int i = 0; i < tempList.count(); ++i) objectRemovedNotify(tempList.at(i), i);
         }
     }
     _Object* first() const { return _objects.first(); }
@@ -417,18 +391,156 @@ public:
 
     // ──────── QML OVERRIDE API ──────────
 public:
-    void append(QObject* item) override final
+    void append(QJSValue value) override final
     {
-        append(qobject_cast<_Object*>(item));
+        if(value.isQObject())
+        {
+            const auto castObject = qobject_cast<_Object*>(value.toQObject());
+            if(castObject)
+            {
+                append(castObject);
+            }
+            else
+            {
+                qWarning() << templateClassName() << ": Fail to append" << value.toString() << ", item isn't a"
+                           << _metaObj.className() << "derived class";
+            }
+        }
+        else if(value.isArray())
+        {
+            QList<_Object*> listToAppend;
+            for(int i = 0; i < value.property("length").toInt(); ++i)
+            {
+                const auto object = value.property(i);
+                if(object.isQObject())
+                {
+                    const auto castObject = qobject_cast<_Object*>(object.toQObject());
+
+                    if(castObject)
+                    {
+                        listToAppend.append(castObject);
+                    }
+                    else
+                    {
+                        qWarning() << templateClassName() << ": Fail to append " << object.toString()
+                                   << ", item isn't a" << _metaObj.className() << "derived class";
+                    }
+                }
+                else
+                {
+                    qWarning() << templateClassName() << ": Fail to append " << object.toString()
+                               << ", item isn't QObject";
+                }
+            }
+            if(!listToAppend.isEmpty())
+                append(listToAppend);
+        }
+        else
+        {
+            qWarning() << templateClassName() << ": Fail to append" << value.toString()
+                       << ", item isn't a QObject, an array of QObject";
+        }
     }
-    void prepend(QObject* item) override final
+    void prepend(QJSValue value) override final
     {
-        prepend(qobject_cast<_Object*>(item));
+        if(value.isQObject())
+        {
+            const auto castObject = qobject_cast<_Object*>(value.toQObject());
+            if(castObject)
+            {
+                prepend(castObject);
+            }
+            else
+            {
+                qWarning() << templateClassName() << ": Fail to prepend" << value.toString() << ", item isn't a"
+                           << _metaObj.className() << "derived class";
+            }
+        }
+        else if(value.isArray())
+        {
+            QList<_Object*> listToPrepend;
+            for(int i = 0; i < value.property("length").toInt(); ++i)
+            {
+                const auto object = value.property(i);
+                if(object.isQObject())
+                {
+                    const auto castObject = qobject_cast<_Object*>(object.toQObject());
+
+                    if(castObject)
+                    {
+                        listToPrepend.append(castObject);
+                    }
+                    else
+                    {
+                        qWarning() << templateClassName() << ": Fail to prepend " << object.toString()
+                                   << ", item isn't a" << _metaObj.className() << "derived class";
+                    }
+                }
+                else
+                {
+                    qWarning() << templateClassName() << ": Fail to prepend " << object.toString()
+                               << ", item isn't QObject";
+                }
+            }
+            if(!listToPrepend.isEmpty())
+                prepend(listToPrepend);
+        }
+        else
+        {
+            qWarning() << templateClassName() << ": Fail to prepend" << value.toString()
+                       << ", item isn't a QObject, an array of QObject";
+        }
     }
 
-    void insert(int idx, QObject* item) override final
+    void insert(int idx, QJSValue value) override final
     {
-        insert(idx, qobject_cast<_Object*>(item));
+        if(value.isQObject())
+        {
+            const auto castObject = qobject_cast<_Object*>(value.toQObject());
+            if(castObject)
+            {
+                insert(idx, castObject);
+            }
+            else
+            {
+                qWarning() << templateClassName() << ": Fail to insert" << value.toString() << ", item isn't a"
+                           << _metaObj.className() << "derived class";
+            }
+        }
+        else if(value.isArray())
+        {
+            QList<_Object*> listToInsert;
+            for(int i = 0; i < value.property("length").toInt(); ++i)
+            {
+                const auto object = value.property(i);
+                if(object.isQObject())
+                {
+                    const auto castObject = qobject_cast<_Object*>(object.toQObject());
+
+                    if(castObject)
+                    {
+                        listToInsert.append(castObject);
+                    }
+                    else
+                    {
+                        qWarning() << templateClassName() << ": Fail to insert " << object.toString()
+                                   << ", item isn't a" << _metaObj.className() << "derived class";
+                    }
+                }
+                else
+                {
+                    qWarning() << templateClassName() << ": Fail to insert " << object.toString()
+                               << ", item isn't QObject";
+                }
+            }
+            if(!listToInsert.isEmpty())
+                insert(idx, listToInsert);
+        }
+        else
+        {
+            qWarning() << templateClassName() << ": Fail to insert" << value.toString()
+                       << ", item isn't a QObject, an array of QObject";
+        }
     }
 
     void remove(QJSValue value) final
@@ -440,23 +552,98 @@ public:
         }
         else if(value.isQObject())
         {
-            const auto qObj = value.toQObject();
-            auto object = qobject_cast<_Object*>(qObj);
-            remove(object);
+            const auto castObject = qobject_cast<_Object*>(value.toQObject());
+            if(castObject)
+            {
+                remove(castObject);
+            }
+            else
+            {
+                qWarning() << templateClassName() << ": Fail to remove" << value.toString() << ", item isn't a"
+                           << _metaObj.className() << "derived class";
+            }
+        }
+        else if(value.isArray())
+        {
+            QList<_Object*> listToRemove;
+            for(int i = 0; i < value.property("length").toInt(); ++i)
+            {
+                const auto object = value.property(i);
+                if(object.isQObject())
+                {
+                    const auto castObject = qobject_cast<_Object*>(object.toQObject());
+
+                    if(castObject)
+                    {
+                        listToRemove.append(castObject);
+                    }
+                    else
+                    {
+                        qWarning() << templateClassName() << ": Fail to insert " << object.toString()
+                                   << ", item isn't a" << _metaObj.className() << "derived class";
+                    }
+                }
+                else
+                {
+                    qWarning() << templateClassName() << ": Fail to insert " << object.toString()
+                               << ", item isn't QObject";
+                }
+            }
+            if(!listToRemove.isEmpty())
+                remove(listToRemove);
+        }
+        else
+        {
+            qWarning() << templateClassName() << ": Fail to remove" << value.toString()
+                       << ", item isn't a QObject, an array of QObject or a number";
         }
     }
 
-    bool contains(QObject* item) const final
+    bool contains(QJSValue value) const final
     {
-        return contains(qobject_cast<_Object*>(item));
+        if(value.isQObject())
+        {
+            const auto castObject = qobject_cast<_Object*>(value.toQObject());
+            if(castObject)
+            {
+                return contains(castObject);
+            }
+            else
+            {
+                qWarning() << templateClassName() << ": Fail to get indexOf" << value.toString() << ", item isn't a"
+                           << _metaObj.className() << "derived class";
+            }
+        }
+        else
+        {
+            qWarning() << templateClassName() << ": Fail to get indexOf" << value.toString()
+                       << ", item isn't a QObject";
+        }
+        return false;
     }
 
-    int indexOf(QObject* item) const override final
+    int indexOf(QJSValue value) const override final
     {
-        return indexOf(qobject_cast<_Object*>(item));
+        if(value.isQObject())
+        {
+            const auto castObject = qobject_cast<_Object*>(value.toQObject());
+            if(castObject)
+            {
+                return indexOf(castObject);
+            }
+            else
+            {
+                qWarning() << templateClassName() << ": Fail to get indexOf" << value.toString() << ", item isn't a"
+                           << _metaObj.className() << "derived class";
+            }
+        }
+        else
+        {
+            qWarning() << templateClassName() << ": Fail to get indexOf" << value.toString()
+                       << ", item isn't a QObject";
+        }
+        return -1;
     }
-
-    int indexOf(const QString& uid) const { return indexOf(get(uid)); }
 
     /** \brief Move index to index-1 */
     void moveUp(const int index) override final
@@ -475,22 +662,82 @@ public:
             return moveUp(index + 1);
     }
 
+    // ──────── DEFAULT CHILDREN ──────────
+protected:
+    void appendDefaultChild(QObject* child) override
+    {
+        const auto object = qobject_cast<_Object*>(child);
+        if(object)
+        {
+            _defaultObjects.append(object);
+            append(object);
+        }
+        else
+        {
+            qWarning() << templateClassName() << ": Fail to append default child " << child->objectName()
+                       << ", that isn't a" << _metaObj.className() << "derived class";
+        }
+    }
+
+    int defaultChildrenCount() override { return _defaultObjects.count(); }
+
+    QObject* defaultChild(int index) override
+    {
+        if(_defaultObjects.count() < index)
+            return nullptr;
+
+        return _defaultObjects.at(index);
+    }
+
+    void clearDefaultChildren() override
+    {
+        remove(_defaultObjects);
+        _defaultObjects.clear();
+    }
+
+    void replaceDefaultChild(int index, QObject* child) override
+    {
+        const auto object = qobject_cast<_Object*>(child);
+        if(!object)
+        {
+            qWarning() << templateClassName() << ": Fail to append default child " << child->objectName()
+                       << ", that isn't a" << _metaObj.className() << "derived class";
+        }
+
+        if(_defaultObjects.count() < index)
+            return;
+
+        const auto previousObject = _defaultObjects.at(index);
+        const auto previousObjectIndex = indexOf(previousObject);
+        if(previousObject)
+            remove(previousObject);
+
+        _defaultObjects.replace(index, object);
+
+        if(child)
+            insert(previousObjectIndex, object);
+    }
+
+    void removeLastChild() override
+    {
+        if(_defaultObjects.isEmpty())
+            return;
+
+        const auto objectToRemove = _defaultObjects.last();
+        remove(objectToRemove);
+        _defaultObjects.removeLast();
+    }
+
     // ──────── OBSERVER API ──────────
 private:
-    void objectAboutToBeInsertedNotify(_Object* object, int index)
-    {
-        onObjectAboutToBeInserted(object, index);
-    }
+    void objectAboutToBeInsertedNotify(_Object* object, int index) { onObjectAboutToBeInserted(object, index); }
     void objectInsertedNotify(_Object* object, int index)
     {
         onObjectInserted(object, index);
         _callbacks.inserted(InsertedCallbackArgs(object, index));
         Q_EMIT objectInserted(object, index);
     }
-    void objectAboutToBeMovedNotify(_Object* object, int src, int dest)
-    {
-        onObjectAboutToBeMoved(object, src, dest);
-    }
+    void objectAboutToBeMovedNotify(_Object* object, int src, int dest) { onObjectAboutToBeMoved(object, src, dest); }
     void objectMovedNotify(_Object* object, int src, int dest)
     {
         onObjectMoved(object, src, dest);
@@ -503,10 +750,7 @@ private:
         _callbacks.removed(RemovedCallbackArgs(object, index));
         Q_EMIT objectRemoved(object, index);
     }
-    void objectRemovedNotify(_Object* object, int index)
-    {
-        onObjectRemoved(object, index);
-    }
+    void objectRemovedNotify(_Object* object, int index) { onObjectRemoved(object, index); }
 
     // ──────── CALLBACK API ──────────
 public:
@@ -521,10 +765,7 @@ public:
     };
     struct InsertedCallbackArgs : _BaseCallbackArgs
     {
-        InsertedCallbackArgs(_Object* object, int index) :
-            _BaseCallbackArgs(object), index(index)
-        {
-        }
+        InsertedCallbackArgs(_Object* object, int index) : _BaseCallbackArgs(object), index(index) {}
 
         int index = -1;
     };
@@ -532,21 +773,15 @@ public:
 
     struct MovedCallbackArgs : _BaseCallbackArgs
     {
-        MovedCallbackArgs(_Object* object, int from, int to) :
-            _BaseCallbackArgs(object), from(from), to(to)
-        {
-        }
+        MovedCallbackArgs(_Object* object, int from, int to) : _BaseCallbackArgs(object), from(from), to(to) {}
 
         int from = -1;
         int to = -1;
     };
 
-    using InsertedCallbackList =
-        eventpp::CallbackList<void(const InsertedCallbackArgs&)>;
-    using RemovedCallbackList =
-        eventpp::CallbackList<void(const RemovedCallbackArgs&)>;
-    using MovedCallbackList =
-        eventpp::CallbackList<void(const MovedCallbackArgs&)>;
+    using InsertedCallbackList = eventpp::CallbackList<void(const InsertedCallbackArgs&)>;
+    using RemovedCallbackList = eventpp::CallbackList<void(const RemovedCallbackArgs&)>;
+    using MovedCallbackList = eventpp::CallbackList<void(const MovedCallbackArgs&)>;
 
     struct Callbacks
     {
@@ -556,37 +791,22 @@ public:
     };
 
 public:
-    typename InsertedCallbackList::Handle onInserted(
-        std::function<void(const InsertedCallbackArgs&)> callback)
+    typename InsertedCallbackList::Handle onInserted(std::function<void(const InsertedCallbackArgs&)> callback)
     {
-        return callback ? _callbacks.inserted.append(callback) :
-                          typename InsertedCallbackList::Handle();
+        return callback ? _callbacks.inserted.append(callback) : typename InsertedCallbackList::Handle();
     }
-    typename RemovedCallbackList::Handle onRemoved(
-        std::function<void(const RemovedCallbackArgs&)> callback)
+    typename RemovedCallbackList::Handle onRemoved(std::function<void(const RemovedCallbackArgs&)> callback)
     {
-        return callback ? _callbacks.removed.append(callback) :
-                          typename RemovedCallbackList::Handle();
+        return callback ? _callbacks.removed.append(callback) : typename RemovedCallbackList::Handle();
     }
-    typename MovedCallbackList::Handle onMoved(
-        std::function<void(const MovedCallbackArgs&)> callback)
+    typename MovedCallbackList::Handle onMoved(std::function<void(const MovedCallbackArgs&)> callback)
     {
-        return callback ? _callbacks.moved.append(callback) :
-                          typename MovedCallbackList::Handle();
+        return callback ? _callbacks.moved.append(callback) : typename MovedCallbackList::Handle();
     }
 
-    void stopListenInsert(typename InsertedCallbackList::Handle h)
-    {
-        _callbacks.inserted.remove(h);
-    }
-    void stopListenRemove(typename RemovedCallbackList::Handle h)
-    {
-        _callbacks.removed.remove(h);
-    }
-    void stopListenMove(typename MovedCallbackList::Handle h)
-    {
-        _callbacks.moved.remove(h);
-    }
+    void stopListenInsert(typename InsertedCallbackList::Handle h) { _callbacks.inserted.remove(h); }
+    void stopListenRemove(typename RemovedCallbackList::Handle h) { _callbacks.removed.remove(h); }
+    void stopListenMove(typename MovedCallbackList::Handle h) { _callbacks.moved.remove(h); }
 
 protected:
     virtual void onObjectAboutToBeInserted(_Object* object, int index) {}
@@ -606,6 +826,7 @@ private:
     QHash<int, int> _signalIdxToRole;
     QList<_Object*> _objects;
     Callbacks _callbacks;
+    QList<_Object*> _defaultObjects;
 };
 
 }

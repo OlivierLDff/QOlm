@@ -16,8 +16,14 @@ void QOlmBase::movePrevious(const int index) { moveUp(index); }
 
 QQmlListProperty<QObject> QOlmBase::defaultChildren()
 {
-    return {this, this, &QOlmBase::appendDefaultChild, &QOlmBase::defaultChildrenCount, &QOlmBase::defaultChild,
-        &QOlmBase::clearDefaultChildren, &QOlmBase::replaceDefaultChild, &QOlmBase::removeLastChild};
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+    return QQmlListProperty<QObject>(this, this, &QOlmBase::appendDefaultChild, &QOlmBase::defaultChildrenCount,
+        &QOlmBase::defaultChild, &QOlmBase::clearDefaultChildren);
+#else
+    return QQmlListProperty<QObject>(this, this, &QOlmBase::appendDefaultChild, &QOlmBase::defaultChildrenCount,
+        &QOlmBase::defaultChild, &QOlmBase::clearDefaultChildren, &QOlmBase::replaceDefaultChild,
+        &QOlmBase::removeLastChild);
+#endif
 }
 
 void QOlmBase::appendDefaultChild(QQmlListProperty<QObject>* list, QObject* child)

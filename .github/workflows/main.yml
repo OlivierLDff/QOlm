@@ -8,7 +8,12 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macOS-latest, ubuntu-latest]
-        version: ['5.12.8', '5.15.0']
+        version: ['5.12.9', '5.15.0']
+        exclude:
+          - os: macOS-latest
+            version: '5.12.9'
+          - os: ubuntu-latest
+            version: '5.12.9'
     steps:
       - uses: actions/checkout@v2
 
@@ -35,13 +40,24 @@ jobs:
         shell: bash
 
       - name: Build QOlm
-        run: cmake --build build --target "QOlm" --config "Release"
+        run: cmake --build build --target "QOlm" --config "Release" -j
 
       - name: Build Examples
-        run: cmake --build build --target "QOlm_Example" --config "Release"
+        run: cmake --build build --target "QOlm_Example" --config "Release" -j
 
-      - name: Build Tests
-        run: cmake --build build --target "QOlm_Tests" --config "Release"
+      - name: Build Cpp Tests
+        run: cmake --build build --target "QOlm_Tests" --config "Release" -j
+
+      - name: Build Qml Tests
+        run: cmake --build build --target "QOlm_TestsQml" --config "Release" -j
 
       - name: Run unit tests
-        run: cd build && ctest --build-config "Release" --progress
+        run: cd build && ctest --build-config "Release" --progress --verbose
+        if: "!contains(matrix.os, 'ubuntu')"
+
+      - name: Run unit tests
+        run: |
+          sudo apt install libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-xinerama0 libxcb-keysyms1 libxcb1 libxcb-render-util0
+          cd build
+          xvfb-run ctest --build-config "Release" --progress --verbose
+        if: contains(matrix.os, 'ubuntu')

@@ -17,11 +17,14 @@ int main(int argc, char *argv[])
     qmlRegisterType<qolm::QOlm<QObject>>("Example", 1, 0, "QtObjectList");
 
     const QUrl url(QStringLiteral("qrc:/ExampleQml.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
+    QObject::connect(
+        &engine, &QQmlApplicationEngine::objectCreated, &app,
+        [url](QObject *obj, const QUrl &objUrl)
+        {
+            if(!obj && url == objUrl)
+                QCoreApplication::exit(-1);
+        },
+        Qt::QueuedConnection);
     engine.load(url);
 
     return app.exec();

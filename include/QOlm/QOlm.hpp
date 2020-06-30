@@ -17,6 +17,8 @@
 
 #include <eventpp/callbacklist.h>
 
+#include <algorithm>
+
 namespace qolm {
 
 template<class _Object>
@@ -220,10 +222,12 @@ public:
     _Object* at(int index) const { return get(index); }
     _Object* get(int index) const
     {
-        _Object* ret = nullptr;
-        if(index >= 0 && index < _objects.size())
-            ret = _objects.value(index);
-        return ret;
+        if(index < 0 || index >= _objects.size())
+        {
+            qWarning() << "The index" << index << "is out of bound.";
+            return nullptr;
+        }
+        return _objects.at(index);
     }
 
     QObject* get(QJSValue index) const override
@@ -236,7 +240,21 @@ public:
     int count() const final { return _count; }
 
     bool contains(_Object* object) const { return _objects.contains(object); }
-    int indexOf(_Object* object) const { return _objects.indexOf(object); }
+    int indexOf(_Object* object) const
+    {
+        if(!object)
+        {
+            qWarning() << "Can't find the index of a nullptr QObject";
+            return -1;
+        }
+        if(!_objects.contains(object))
+        {
+            qWarning() << "This QObject" << object << "isn't in the list.";
+            return -1;
+        }
+        return _objects.indexOf(object);
+    }
+
     void append(_Object* object)
     {
         if(object != nullptr)
@@ -249,6 +267,10 @@ public:
             updateCounter();
             endInsertRows();
             objectInsertedNotify(object, pos);
+        }
+        else
+        {
+            qWarning() << "Can't append a null Object";
         }
     }
 
@@ -264,9 +286,26 @@ public:
             endInsertRows();
             objectInsertedNotify(item, 0);
         }
+        else
+        {
+            qWarning() << "Can't prepend a null object";
+        }
     }
     void insert(int index, _Object* item)
     {
+        if(index > count())
+        {
+            qWarning() << "index " << index << " is greater than count "<< count() <<". "
+                << "The item will be inserted at the end of the list";
+            index = count();
+        }
+        else if(index < 0)
+        {
+            qWarning() << "index " << index << " is lower than 0. "
+                       << "The item will be inserted at the beginning of the list";
+            index = 0;
+        }
+
         if(item != nullptr)
         {
             objectAboutToBeInsertedNotify(item, index);
@@ -276,6 +315,10 @@ public:
             updateCounter();
             endInsertRows();
             objectInsertedNotify(item, index);
+        }
+        else
+        {
+            qWarning() << "Can't insert a null Object";
         }
     }
     void append(const QList<_Object*>& itemList)
@@ -292,6 +335,10 @@ public:
             updateCounter();
             endInsertRows();
             for(int i = 0; i < itemList.count(); ++i) objectInsertedNotify(itemList.at(i), i + pos);
+        }
+        else
+        {
+            qWarning() << "Can't append an empty list";
         }
     }
     void prepend(const QList<_Object*>& itemList)
@@ -312,6 +359,10 @@ public:
             endInsertRows();
             for(int i = 0; i < itemList.count(); ++i) objectInsertedNotify(itemList.at(i), i);
         }
+        else
+        {
+            qWarning() << "Can't prepend an empty list";
+        }
     }
     void insert(int idx, const QList<_Object*>& itemList)
     {
@@ -331,38 +382,69 @@ public:
             endInsertRows();
             for(int i = 0; i < itemList.count(); ++i) objectInsertedNotify(itemList.at(i), i + idx);
         }
+        else
+        {
+            qWarning() << "Can't insert an empty list";
+        }
     }
     void move(int from, int to) override final
     {
-        if(from != to && from >= 0 && to >= 0 && from < _objects.size() && to < _objects.size())
+        if(from >= 0 && from < count())
         {
-            objectAboutToBeMovedNotify(_objects.at(from), from, to);
+            const auto clampedTo = std::clamp(to, 0, count() - 1);
+            if(clampedTo != to)
+            {
+                qWarning() << "'to'" << to << " in move operation have been clamped to" << clampedTo;
+                to = clampedTo;
+                if(from == to)
+                {
+                    qWarning() << "Can't move object from" << from << "to" << to << "because from == to";
+                    return;
+                }
+            }
+
+            const auto object = _objects.at(from);
+            objectAboutToBeMovedNotify(object, from, to);
             beginMoveRows(noParent(), from, from, noParent(), (from < to ? to + 1 : to));
             _objects.move(from, to);
             endMoveRows();
-            objectMovedNotify(_objects.at(from), from, to);
+            objectMovedNotify(object, from, to);
+        }
+        else
+        {
+            qWarning() << "'From'"<< from << "is out of bound";
         }
     }
     void remove(_Object* object)
     {
         if(object != nullptr)
             remove(indexOf(object));
+        qWarning() << "Can't remove a null pointer Object of a list";
     }
     void remove(const QList<_Object*>& objects)
     {
         for(const auto object: objects) remove(object);
     }
-    void remove(int index)
+    void remove(int index, int count = 1)
     {
-        if(index >= 0 && index < _objects.size())
+        if(index >= 0 && (index + count - 1) < _objects.size())
         {
-            objectAboutToBeRemovedNotify(_objects.at(index), index);
-            beginRemoveRows(noParent(), index, index);
-            _Object* item = _objects.takeAt(index);
-            dereferenceItem(item);
+            QList<_Object*> tempList;
+            for(const auto item: *this){ tempList.append(item); }
+            for(int i = 0; i < count; ++i) objectAboutToBeRemovedNotify(tempList.at(index + i), index + i);
+            beginRemoveRows(noParent(), index, index + count - 1);
+            for(int i = 0; i < count; ++i)
+            {
+                _Object* item = _objects.takeAt(index);
+                dereferenceItem(item);
+            }
             updateCounter();
             endRemoveRows();
-            objectRemovedNotify(item, index);
+            for(int i = 0; i < count; ++i) objectRemovedNotify(tempList.at(index + i), index + i);
+        }
+        else
+        {
+            qWarning() << "Can't remove an object whose index is out of bound";
         }
     }
     void clear() override final
@@ -382,10 +464,36 @@ public:
             endRemoveRows();
             for(int i = 0; i < tempList.count(); ++i) objectRemovedNotify(tempList.at(i), i);
         }
+        else
+        {
+            qWarning() << "Can't clear an object whose index is out of bound";
+        }
     }
-    _Object* first() const { return _objects.first(); }
+    _Object* first() const
+    {
+        if(!_objects.isEmpty())
+        {
+            return _objects.first();
+        }
+        else
+        {
+            qWarning() << "The first element of an empty list doesn't exist !";
+            return nullptr;
+        }
+    }
 
-    _Object* last() const { return _objects.last(); }
+    _Object* last() const
+    {
+        if(!_objects.isEmpty())
+        {
+            return _objects.last();
+        }
+        else
+        {
+            qWarning() << "The last element of an empty list doesn't exist !";
+            return nullptr;
+        }
+    }
 
     const QList<_Object*>& toList() const { return _objects; }
 
@@ -649,7 +757,13 @@ public:
     void moveUp(const int index) override final
     {
         if(index > 0 && index < count())
+        {
             move(index, index - 1);
+        }
+        else
+        {
+        qWarning() << "The index is the first of the list or index is out of bound";
+        }
     }
 
     /** \brief Move index to index+1 */
@@ -659,7 +773,13 @@ public:
             index >= 0 &&  // We can be from the first
             index < (count() - 1)  // To the last one minus 1
         )
-            return moveUp(index + 1);
+        {
+            move(index, index + 1);
+        }
+        else
+        {
+            qWarning() << "The index is the last of the list or index is out of bound";
+        }
     }
 
     // ──────── DEFAULT CHILDREN ──────────

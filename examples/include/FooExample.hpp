@@ -47,7 +47,7 @@ public:
         onInserted(
             [](const InsertedCallbackArgs& foo)
             {
-                // foo->foo can be directly accessed
+                // foo->getFoo() can be directly accessed
                 // foo.object gives a _Object*
                 // foo.index gives inserted object index
                 qInfo("callback : onInserted 0x%s : %d",
@@ -59,7 +59,7 @@ public:
         onRemoved(
             [](const RemovedCallbackArgs& foo)
             {
-                // foo->foo can be directly accessed
+                // foo->getFoo() can be directly accessed
                 // foo.object gives a _Object*
                 // foo.index gives removed object index
                 qInfo("callback : onRemoved 0x%s : %d",
@@ -71,7 +71,7 @@ public:
         onMoved(
             [](const MovedCallbackArgs& foo)
             {
-                // foo->foo can be directly accessed
+                // foo->getFoo() can be directly accessed
                 // foo.object gives a _Object*
                 // foo.from gives previous object index
                 // foo.to gives new object index

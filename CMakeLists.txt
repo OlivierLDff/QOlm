@@ -6,14 +6,6 @@
 
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
-# ───── DEPENDENCIES ─────
-
-set(GTEST_REPOSITORY "https://github.com/OlivierLDff/googletest" CACHE STRING "Repository of googletest")
-set(GTEST_TAG "cmake-cpp11-feature" CACHE STRING "Git tag/branch of googletest")
-
-set(EVENTPP_REPOSITORY "https://github.com/OlivierLDff/eventpp" CACHE STRING "Repository of eventpp")
-set(EVENTPP_TAG "master" CACHE STRING "Git tag/branch of eventpp")
-
 # ───── OPTIONS ─────
 
 # General

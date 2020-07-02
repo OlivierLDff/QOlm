@@ -1,5 +1,7 @@
 # QOlm
 
+![](https://github.com/OlivierLDff/QOlm/workflows/CI/badge.svg)
+
 Bring `qolm::QOlm` data type based on `QAbstractListModel` that provide a list of `QObject` based class to **js** and **c++**. The goal of this list is to dynamically update views by reacting to **insert**, **remove**, **move** operations.
 
 ## Overview

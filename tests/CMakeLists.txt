@@ -7,9 +7,6 @@
 # We need QSignalSpy
 find_package(Qt5Test CONFIG REQUIRED)
 
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
 set(QOLM_TEST_TARGET ${QOLM_TESTS_PREFIX}_Tests)
 
 set(QOLM_TEST_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR})

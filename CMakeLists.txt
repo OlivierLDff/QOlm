@@ -8,8 +8,8 @@ cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
 # ───── DEPENDENCIES ─────
 
-set(GTEST_REPOSITORY "https://github.com/google/googletest" CACHE STRING "Repository of googletest")
-set(GTEST_TAG "master" CACHE STRING "Git tag/branch of googletest")
+set(GTEST_REPOSITORY "https://github.com/OlivierLDff/googletest" CACHE STRING "Repository of googletest")
+set(GTEST_TAG "cmake-cpp11-feature" CACHE STRING "Git tag/branch of googletest")
 
 set(EVENTPP_REPOSITORY "https://github.com/OlivierLDff/eventpp" CACHE STRING "Repository of eventpp")
 set(EVENTPP_TAG "master" CACHE STRING "Git tag/branch of eventpp")
@@ -35,7 +35,7 @@ set(QOLM_EXAMPLES_PREFIX ${QOLM_PROJECT} CACHE STRING "Prefix for all QOlm tests
 
 set(QOLM_VERSION_MAJOR 3)
 set(QOLM_VERSION_MINOR 0)
-set(QOLM_VERSION_PATCH 0)
+set(QOLM_VERSION_PATCH 1)
 if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
   EXECUTE_PROCESS(
     COMMAND git rev-parse --short HEAD
@@ -86,34 +86,19 @@ message(STATUS "---------------- DONE WITH OPTIONS. -----------------")
 
 find_package(Qt5 REQUIRED COMPONENTS
   Core
-  Gui
   Qml
 )
 
-include(FetchContent)
-
-# googletest
-FetchContent_Declare(
-  googletest
-  GIT_REPOSITORY ${GTEST_REPOSITORY}
-  GIT_TAG        ${GTEST_TAG}
-  )
-
-# eventpp
-FetchContent_Declare(
-  eventpp
-  GIT_REPOSITORY ${EVENTPP_REPOSITORY}
-  GIT_TAG        ${EVENTPP_TAG}
-  )
-
-FetchContent_MakeAvailable(eventpp)
+include(cmake/FetchEventpp.cmake)
 
 # ───── LIBRARY ─────
 
-set(QOLM_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/include/QOlm/QOlmBase.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/QOlmBase.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/QOlm/QOlm.hpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/QOlm/Export.hpp)
+set(QOLM_SRCS
+  include/QOlm/Export.hpp
+  include/QOlm/QOlmBase.hpp
+  include/QOlm/QOlm.hpp
+  src/QOlmBase.cpp
+)
 
 if(QOLM_BUILD_SHARED)
   add_library(${QOLM_TARGET} SHARED ${QOLM_SRCS})
@@ -134,6 +119,7 @@ set_target_properties(${QOLM_TARGET} PROPERTIES AUTOMOC TRUE)
 # ───── LIBRARY TESTS ─────
 
 if(QOLM_ENABLE_TESTS)
+  include(cmake/FetchGTest.cmake)
   enable_testing()
   add_subdirectory(tests)
 endif()

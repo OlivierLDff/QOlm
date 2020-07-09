@@ -464,10 +464,6 @@ public:
             endRemoveRows();
             for(int i = 0; i < tempList.count(); ++i) objectRemovedNotify(tempList.at(i), i);
         }
-        else
-        {
-            qWarning() << "Can't clear an object whose index is out of bound";
-        }
     }
     _Object* first() const
     {

@@ -295,8 +295,8 @@ public:
     {
         if(index > count())
         {
-            qWarning() << "index " << index << " is greater than count "<< count() <<". "
-                << "The item will be inserted at the end of the list";
+            qWarning() << "index " << index << " is greater than count " << count() << ". "
+                       << "The item will be inserted at the end of the list";
             index = count();
         }
         else if(index < 0)
@@ -412,14 +412,17 @@ public:
         }
         else
         {
-            qWarning() << "'From'"<< from << "is out of bound";
+            qWarning() << "'From'" << from << "is out of bound";
         }
     }
     void remove(_Object* object)
     {
-        if(object != nullptr)
-            remove(indexOf(object));
-        qWarning() << "Can't remove a null pointer Object of a list";
+        if(object == nullptr)
+        {
+            qWarning() << "Fail to remove nullptr object from QOlm<" << _metaObj.className() << ">";
+            return;
+        }
+        remove(indexOf(object));
     }
     void remove(const QList<_Object*>& objects)
     {
@@ -430,7 +433,7 @@ public:
         if(index >= 0 && (index + count - 1) < _objects.size())
         {
             QList<_Object*> tempList;
-            for(const auto item: *this){ tempList.append(item); }
+            for(const auto item: *this) { tempList.append(item); }
             for(int i = 0; i < count; ++i) objectAboutToBeRemovedNotify(tempList.at(index + i), index + i);
             beginRemoveRows(noParent(), index, index + count - 1);
             for(int i = 0; i < count; ++i)
@@ -758,7 +761,7 @@ public:
         }
         else
         {
-        qWarning() << "The index is the first of the list or index is out of bound";
+            qWarning() << "The index is the first of the list or index is out of bound";
         }
     }
 

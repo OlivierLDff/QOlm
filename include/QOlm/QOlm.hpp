@@ -239,20 +239,20 @@ public:
     int roleForName(const QByteArray& name) const final { return _roles.key(name, -1); }
     int count() const final { return _count; }
 
-    bool contains(_Object* object) const { return _objects.contains(object); }
-    int indexOf(_Object* object) const
+    bool contains(const _Object* object) const { return _objects.contains(const_cast<_Object*>(object)); }
+    int indexOf(const _Object* object) const
     {
         if(!object)
         {
             qWarning() << "Can't find the index of a nullptr QObject";
             return -1;
         }
-        if(!_objects.contains(object))
+        const auto index = _objects.indexOf(const_cast<_Object*>(object));
+        if(index <= 0)
         {
             qWarning() << "This QObject" << object << "isn't in the list.";
-            return -1;
         }
-        return _objects.indexOf(object);
+        return index;
     }
 
     void append(_Object* object)
@@ -415,7 +415,7 @@ public:
             qWarning() << "'From'" << from << "is out of bound";
         }
     }
-    void remove(_Object* object)
+    void remove(const _Object* object)
     {
         if(object == nullptr)
         {
@@ -426,7 +426,7 @@ public:
     }
     void remove(const QList<_Object*>& objects)
     {
-        for(const auto object: objects) remove(object);
+        for(const auto* object: objects) remove(object);
     }
     void remove(int index, int count = 1)
     {

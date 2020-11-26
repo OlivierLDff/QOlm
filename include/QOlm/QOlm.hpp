@@ -248,9 +248,9 @@ public:
             return -1;
         }
         const auto index = _objects.indexOf(const_cast<_Object*>(object));
-        if(index <= 0)
+        if(index < 0)
         {
-            qWarning() << "This QObject" << object << "isn't in the list.";
+            qWarning() << "The QObject" << object << "isn't in this qolm::QOlm list.";
         }
         return index;
     }

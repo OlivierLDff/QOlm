@@ -214,8 +214,16 @@ public:
     using const_iterator = typename QList<_Object*>::const_iterator;
     const_iterator begin() const { return _objects.begin(); }
     const_iterator end() const { return _objects.end(); }
+    const_iterator cbegin() const { return _objects.begin(); }
+    const_iterator cend() const { return _objects.end(); }
     const_iterator constBegin() const { return _objects.constBegin(); }
     const_iterator constEnd() const { return _objects.constEnd(); }
+
+    using const_reverse_iterator = typename QList<_Object*>::const_reverse_iterator;
+    const_reverse_iterator rbegin() const { return _objects.rbegin(); }
+    const_reverse_iterator rend() const { return _objects.rend(); }
+    const_reverse_iterator crbegin() const { return _objects.crbegin(); }
+    const_reverse_iterator crend() const { return _objects.crend(); }
 
     // ──────── C++ API ──────────
 public:

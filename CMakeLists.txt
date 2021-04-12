@@ -6,6 +6,11 @@
 
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
+set(QOLM_MAIN_PROJECT OFF)
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  set(QOLM_MAIN_PROJECT ON)
+endif()
+
 # ───── OPTIONS ─────
 
 # General
@@ -26,8 +31,8 @@ set(QOLM_EXAMPLES_PREFIX ${QOLM_PROJECT} CACHE STRING "Prefix for all QOlm tests
 # ───── VERSION ─────
 
 set(QOLM_VERSION_MAJOR 3)
-set(QOLM_VERSION_MINOR 0)
-set(QOLM_VERSION_PATCH 1)
+set(QOLM_VERSION_MINOR 1)
+set(QOLM_VERSION_PATCH 0)
 if( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
   EXECUTE_PROCESS(
     COMMAND git rev-parse --short HEAD
@@ -116,4 +121,8 @@ endif()
 
 if(QOLM_ENABLE_EXAMPLES)
   add_subdirectory(examples)
+endif()
+
+if(QOLM_MAIN_PROJECT)
+  include(cmake/PrintConfiguration.cmake)
 endif()

@@ -76,12 +76,8 @@ message(STATUS "---------------- DONE WITH OPTIONS. -----------------")
 
 # ───── DEPENDENCIES ─────
 
-find_package(Qt5 REQUIRED COMPONENTS
-  Core
-  Qml
-)
-
-include(cmake/FetchEventpp.cmake)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Qml REQUIRED)
 
 # ───── LIBRARY ─────
 
@@ -102,7 +98,7 @@ endif()
 
 target_include_directories(${QOLM_TARGET} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_compile_features(${QOLM_TARGET} PUBLIC cxx_std_17)
-target_link_libraries(${QOLM_TARGET} PUBLIC Qt5::Core Qt5::Qml)
+target_link_libraries(${QOLM_TARGET} PUBLIC Qt::Core Qt::Qml)
 
 set_target_properties(${QOLM_TARGET} PROPERTIES FOLDER ${QOLM_FOLDER_PREFIX})
 source_group("QOlm" FILES ${QOLM_SRCS})

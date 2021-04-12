@@ -225,43 +225,27 @@ protected:
 
 ### Observe with callback
 
-Regular callback not dependent on qt can be used to handle insert/remove/move operation. We can't use signal with correct pointer type because qt doesn't support template moc.
+QOlm provide lambda connection with already `qobject_cast` objects. This is the preferred and easier way to observe the list
 
 ```cpp
 FooList list;
-list.onInserted([](const InsertedCallbackArgs& foo)
-{
-    // foo->foo can be directly accessed
-    // foo.object gives a _Object*
-    // foo.index gives inserted object index
-});
-list.onRemoved([](const RemovedCallbackArgs& foo)
-{
-    // foo->foo can be directly accessed
-    // foo.object gives a _Object*
-    // foo.index gives removed object index
-});
-list.onMoved([](const MovedCallbackArgs& foo)
-{
-    // foo->foo can be directly accessed
-    // foo.object gives a _Object*
-    // foo.from gives previous object index
-    // foo.to gives new object index
-});
+
+// Preferred API, safer to use when giving a context
+list.onInserted(&list, [](Foo* foo, int index){});
+list.onInserted(&list, [](Foo* foo){});
+list.onRemoved(&list, [](Foo* foo, int index){});
+list.onRemoved(&list, [](Foo* foo){});
+list.onMoved(&list, [](Foo* foo, int from, int to){});
+
+// Should only be used when your callback doesn't require any context
+list.onInserted([](Foo* foo, int index){});
+list.onInserted([](Foo* foo){});
+list.onRemoved([](Foo* foo, int index){});
+list.onRemoved([](Foo* foo){});
+list.onMoved([](Foo* foo, int from, int to){});
 ```
 
-Benefit of this method, is that the list can be observed by non qt object.
-
-Each function return a callback handle that can be used to remove the callback.
-
-```cpp
-auto handleInsert = list.onInserted([](const InsertedCallbackArgs& foo) {});
-list.stopListenInsert(handleInsert);
-auto handleRemove = list.onInserted([](const InsertedCallbackArgs& foo) {});
-list.stopListenRemove(handleRemove);
-auto handleMove = list.onInserted([](const InsertedCallbackArgs& foo) {});
-list.stopListenMove(handleMove);
-```
+> When connecting without any `receiver`, this list is used as the context.
 
 ## Iterator
 
@@ -269,8 +253,12 @@ list.stopListenMove(handleMove);
 
 ```cpp
 FooList list;
-for(const auto foo : list)
+for(const auto* foo : list)
 {
     //foo->getFoo()
+}
+for(auto* foo : list)
+{
+    //foo->setFoo(12)
 }
 ```

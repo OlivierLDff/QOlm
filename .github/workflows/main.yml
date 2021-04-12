@@ -8,12 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macOS-latest, ubuntu-latest]
-        version: ['5.12.9', '5.15.2']
-        exclude:
-          - os: macOS-latest
-            version: '5.12.9'
-          - os: ubuntu-latest
-            version: '5.12.9'
+        version: ['5.15.2']
     steps:
       - uses: actions/checkout@v2
 

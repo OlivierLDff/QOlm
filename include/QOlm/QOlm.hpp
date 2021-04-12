@@ -15,17 +15,17 @@
 
 #include <QOlm/QOlmBase.hpp>
 
-#include <QByteArray>
-#include <QDebug>
-#include <QHash>
-#include <QList>
-#include <QMetaMethod>
-#include <QMetaObject>
-#include <QMetaProperty>
-#include <QObject>
-#include <QString>
-#include <QVariant>
-#include <QVector>
+#include <QtCore/QByteArray>
+#include <QtCore/QDebug>
+#include <QtCore/QHash>
+#include <QtCore/QList>
+#include <QtCore/QMetaMethod>
+#include <QtCore/QMetaObject>
+#include <QtCore/QMetaProperty>
+#include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QVariant>
+#include <QtCore/QVector>
 
 #include <eventpp/callbacklist.h>
 

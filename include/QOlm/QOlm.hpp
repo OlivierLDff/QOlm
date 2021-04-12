@@ -27,9 +27,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QVector>
 
-#include <eventpp/callbacklist.h>
-
-#include <algorithm>
+#include <functional>
 
 namespace qolm {
 
@@ -873,79 +871,20 @@ private:
     void objectInsertedNotify(_Object* object, int index)
     {
         onObjectInserted(object, index);
-        _callbacks.inserted(InsertedCallbackArgs(object, index));
         Q_EMIT objectInserted(object, index);
     }
     void objectAboutToBeMovedNotify(_Object* object, int src, int dest) { onObjectAboutToBeMoved(object, src, dest); }
     void objectMovedNotify(_Object* object, int src, int dest)
     {
         onObjectMoved(object, src, dest);
-        _callbacks.moved(MovedCallbackArgs(object, src, dest));
         Q_EMIT objectMoved(object, src, dest);
     }
     void objectAboutToBeRemovedNotify(_Object* object, int index)
     {
         onObjectAboutToBeRemoved(object, index);
-        _callbacks.removed(RemovedCallbackArgs(object, index));
         Q_EMIT objectRemoved(object, index);
     }
     void objectRemovedNotify(_Object* object, int index) { onObjectRemoved(object, index); }
-
-    // ──────── CALLBACK API ──────────
-public:
-    struct _BaseCallbackArgs
-    {
-        explicit _BaseCallbackArgs(_Object* object) : object(object) {}
-
-        _Object* object = nullptr;
-
-        _Object* operator->() const { return object; }
-        operator _Object*() const { return object; }
-    };
-    struct InsertedCallbackArgs : _BaseCallbackArgs
-    {
-        InsertedCallbackArgs(_Object* object, int index) : _BaseCallbackArgs(object), index(index) {}
-
-        int index = -1;
-    };
-    using RemovedCallbackArgs = InsertedCallbackArgs;
-
-    struct MovedCallbackArgs : _BaseCallbackArgs
-    {
-        MovedCallbackArgs(_Object* object, int from, int to) : _BaseCallbackArgs(object), from(from), to(to) {}
-
-        int from = -1;
-        int to = -1;
-    };
-
-    using InsertedCallbackList = eventpp::CallbackList<void(const InsertedCallbackArgs&)>;
-    using RemovedCallbackList = eventpp::CallbackList<void(const RemovedCallbackArgs&)>;
-    using MovedCallbackList = eventpp::CallbackList<void(const MovedCallbackArgs&)>;
-
-    struct Callbacks
-    {
-        InsertedCallbackList inserted;
-        RemovedCallbackList removed;
-        MovedCallbackList moved;
-    };
-
-public:
-    typename InsertedCallbackList::Handle onInserted(std::function<void(const InsertedCallbackArgs&)> callback)
-    {
-        return callback ? _callbacks.inserted.append(callback) : typename InsertedCallbackList::Handle();
-    }
-    typename RemovedCallbackList::Handle onRemoved(std::function<void(const RemovedCallbackArgs&)> callback)
-    {
-        return callback ? _callbacks.removed.append(callback) : typename RemovedCallbackList::Handle();
-    }
-    typename MovedCallbackList::Handle onMoved(std::function<void(const MovedCallbackArgs&)> callback)
-    {
-        return callback ? _callbacks.moved.append(callback) : typename MovedCallbackList::Handle();
-    }
-
-    void stopListenInsert(typename InsertedCallbackList::Handle h) { _callbacks.inserted.remove(h); }
-    void stopListenRemove(typename RemovedCallbackList::Handle h) { _callbacks.removed.remove(h); }
-    void stopListenMove(typename MovedCallbackList::Handle h) { _callbacks.moved.remove(h); }
 
 protected:
     virtual void onObjectAboutToBeInserted(_Object* object, int index) {}
@@ -954,6 +893,119 @@ protected:
     virtual void onObjectMoved(_Object* object, int src, int dest) {}
     virtual void onObjectAboutToBeRemoved(_Object* object, int index) {}
     virtual void onObjectRemoved(_Object* object, int index) {}
+
+public:
+    QMetaObject::Connection onInserted(QObject* receiver, std::function<void(_Object* object, int index)> callback)
+    {
+        if(!receiver)
+        {
+            qWarning() << "QOlm::onInserted: Fail to connect to nullptr receiver";
+            return {};
+        }
+
+        if(!callback)
+        {
+            qWarning() << "QOlm::onInserted: Fail to connect empty lambda";
+            return {};
+        }
+
+        return connect(this, &QOlmBase::objectInserted, receiver,
+            [callback](QObject* qobject, int index)
+            {
+                _Object* object = qobject_cast<_Object*>(qobject);
+                Q_ASSERT(object);
+                callback(object, index);
+            });
+    }
+
+    QMetaObject::Connection onInserted(QObject* receiver, std::function<void(_Object* object)> callback)
+    {
+        if(!callback)
+        {
+            qWarning() << "QOlm::onInserted: Fail to connect empty lambda";
+            return {};
+        }
+
+        return onInserted(receiver, [callback](_Object* object, int) { callback(object); });
+    }
+    QMetaObject::Connection onInserted(std::function<void(_Object* object, int index)> callback)
+    {
+        return onInserted(this, callback);
+    }
+    QMetaObject::Connection onInserted(std::function<void(_Object* object)> callback)
+    {
+        return onInserted(this, callback);
+    }
+
+    QMetaObject::Connection onRemoved(QObject* receiver, std::function<void(_Object* object, int index)> callback)
+    {
+        if(!receiver)
+        {
+            qWarning() << "QOlm::onRemoved: Fail to connect to nullptr receiver";
+            return {};
+        }
+
+        if(!callback)
+        {
+            qWarning() << "QOlm::onRemoved: Fail to connect empty lambda";
+            return {};
+        }
+
+        return connect(this, &QOlmBase::objectRemoved, receiver,
+            [callback](QObject* qobject, int index)
+            {
+                _Object* object = qobject_cast<_Object*>(qobject);
+                Q_ASSERT(object);
+                callback(object, index);
+            });
+    }
+
+    QMetaObject::Connection onRemoved(QObject* receiver, std::function<void(_Object* object)> callback)
+    {
+        if(!callback)
+        {
+            qWarning() << "QOlm::onRemoved: Fail to connect empty lambda";
+            return {};
+        }
+
+        return onRemoved(receiver, [callback](_Object* object, int) { callback(object); });
+    }
+    QMetaObject::Connection onRemoved(std::function<void(_Object* object, int index)> callback)
+    {
+        return onRemoved(this, callback);
+    }
+    QMetaObject::Connection onRemoved(std::function<void(_Object* object)> callback)
+    {
+        return onRemoved(this, callback);
+    }
+
+    QMetaObject::Connection onMoved(QObject* receiver, std::function<void(_Object* object, int from, int to)> callback)
+    {
+        if(!receiver)
+        {
+            qWarning() << "QOlm::onMoved: Fail to connect to nullptr receiver";
+            return {};
+        }
+
+        if(!callback)
+        {
+            qWarning() << "QOlm::onMoved: Fail to connect empty lambda";
+            return {};
+        }
+
+        return connect(this, &QOlmBase::objectMoved, receiver,
+            [callback](QObject* qobject, int from, int to)
+            {
+                _Object* object = qobject_cast<_Object*>(qobject);
+                Q_ASSERT(object);
+                callback(object, from, to);
+            });
+    }
+
+    QMetaObject::Connection onMoved(std::function<void(_Object* object, int from, int to)> callback)
+    {
+        return onMoved(this, callback);
+    }
 
     // ──────── ATTRIBUTES ──────────
 private:
@@ -964,7 +1016,6 @@ private:
     QHash<int, QByteArray> _roles;
     QHash<int, int> _signalIdxToRole;
     QList<_Object*> _objects;
-    Callbacks _callbacks;
     QList<_Object*> _defaultObjects;
 };
 

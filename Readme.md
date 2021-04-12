@@ -258,9 +258,9 @@ But those signals are not very convenient to use as a end user. That's why `QOlm
 
 `qolm::QOlmBase` provide basic signal to react to `QObject` insert/remove/move operation.
 
-* `onObjectInserted(QObject* object, int index)`
-* `onObjectRemoved(QObject* object, int index)`
-* `onObjectMoved(QObject* object, int from, int to)`
+* `objectInserted(QObject* object, int index)`
+* `objectRemoved(QObject* object, int index)`
+* `objectMoved(QObject* object, int from, int to)`
 
 They are call when the model can safely be iterated. You can simply retrieve a correct pointer by using `qobject_cast<_Object*>(object)`.
 

@@ -15,9 +15,9 @@
 
 #include <QOlm/Export.hpp>
 
-#include <QAbstractListModel>
-#include <QQmlListProperty>
-#include <QJSValue>
+#include <QtCore/QAbstractListModel>
+#include <QtQml/QQmlListProperty>
+#include <QtQml/QJSValue>
 
 namespace qolm {
 

@@ -5,7 +5,7 @@
 #
 
 # We need QSignalSpy
-find_package(Qt5 REQUIRED COMPONENTS
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
     Quick
     QuickTest
     Test
@@ -28,9 +28,9 @@ message(STATUS "Add Test: ${QOLM_TEST_TARGET}")
 # Create the executable
 add_executable(${QOLM_TEST_TARGET} ${QOLM_TEST_SRCS})
 set_target_properties(${QOLM_TEST_TARGET} PROPERTIES AUTOMOC TRUE)
-target_include_directories(${QOLM_TEST_TARGET} PUBLIC ${QOLM_TEST_TARGET_DIR}/include)
+target_include_directories(${QOLM_TEST_TARGET} PRIVATE ${QOLM_TEST_TARGET_DIR}/include)
 target_link_libraries(${QOLM_TEST_TARGET} PRIVATE ${QOLM_TARGET})
-target_link_libraries(${QOLM_TEST_TARGET} PRIVATE Qt5::Test gtest gmock)
+target_link_libraries(${QOLM_TEST_TARGET} PRIVATE Qt::Test gtest gmock)
 set_target_properties(${QOLM_TEST_TARGET} PROPERTIES FOLDER ${QOLM_FOLDER_PREFIX}/Tests)
 
 # Register the test
@@ -47,9 +47,9 @@ message(STATUS "Add Test: ${QOLM_TEST_TARGET_QML}")
 # Create the executable
 add_executable(${QOLM_TEST_TARGET_QML} ${QOLM_TEST_QML_SRCS})
 set_target_properties(${QOLM_TEST_TARGET_QML} PROPERTIES AUTOMOC TRUE AUTORCC TRUE)
-target_include_directories(${QOLM_TEST_TARGET_QML} PUBLIC ${QOLM_TEST_TARGET_QML_DIR}/include)
+target_include_directories(${QOLM_TEST_TARGET_QML} PRIVATE ${QOLM_TEST_TARGET_QML_DIR}/include)
 target_link_libraries(${QOLM_TEST_TARGET_QML} PRIVATE ${QOLM_TARGET})
-target_link_libraries(${QOLM_TEST_TARGET_QML} PRIVATE Qt5::QuickTest Qt5::Test Qt5::Quick)
+target_link_libraries(${QOLM_TEST_TARGET_QML} PRIVATE Qt::QuickTest Qt::Test Qt::Quick)
 set_target_properties(${QOLM_TEST_TARGET_QML} PROPERTIES FOLDER ${QOLM_FOLDER_PREFIX}/Tests)
 
 # Register the test

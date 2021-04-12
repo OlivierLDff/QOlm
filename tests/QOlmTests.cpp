@@ -1,4 +1,4 @@
-// Our test classes
+﻿// Our test classes
 #include <QOlm/QOlm.hpp>
 
 // gtest framework
@@ -65,10 +65,7 @@ TEST_F(QOlmTestListFilled, IndexOf)
     ASSERT_EQ(list.indexOf(foo5), -1);
 }
 
-TEST_F(QOlmTestListFilled, Count)
-{
-    ASSERT_EQ(list.count(), 4);
-}
+TEST_F(QOlmTestListFilled, Count) { ASSERT_EQ(list.count(), 4); }
 
 template<class T = QObject>
 class QOlmMock : public qolm::QOlm<T>
@@ -86,7 +83,6 @@ public:
 class QOlmTestMock : public ::testing::Test
 {
 protected:
-
     QOlmMock<QObject> list;
 
     QObject* foo1 = new QObject(&list);
@@ -94,8 +90,6 @@ protected:
     QObject* foo3 = new QObject(&list);
     QObject* foo4 = new QObject(&list);
     QObject* foo5 = new QObject(&list);
-
-
 };
 
 TEST_F(QOlmTestMock, AppendQObject)
@@ -117,18 +111,18 @@ TEST_F(QOlmTestMock, AppendQObject)
     QObject* expectedObject = nullptr;
 
     list.onInserted(
-        [&](const auto& args)
+        [&](QObject* object, int index)
         {
             ASSERT_TRUE(expectedCallback);
-            ASSERT_EQ(expectedIndex, args.index);
-            ASSERT_EQ(expectedObject, args.object);
+            ASSERT_EQ(expectedIndex, index);
+            ASSERT_EQ(expectedObject, object);
 
             expectedCallback = false;
             expectedIndex = -1;
             expectedObject = nullptr;
         });
-    list.onMoved([&](const auto& args) { ASSERT_TRUE(false); });
-    list.onRemoved([&](const auto& args) { ASSERT_TRUE(false); });
+    list.onMoved([&](QObject* object, int from, int to) { ASSERT_TRUE(false); });
+    list.onRemoved([&](QObject* object, int index) { ASSERT_TRUE(false); });
 
     expectedCallback = true;
     expectedIndex = 0;
@@ -232,18 +226,18 @@ TEST_F(QOlmTestMock, PrependQObject)
     QObject* expectedObject = nullptr;
 
     list.onInserted(
-        [&](const auto& args)
+        [&](QObject* object, int index)
         {
             ASSERT_TRUE(expectedCallback);
-            ASSERT_EQ(expectedIndex, args.index);
-            ASSERT_EQ(expectedObject, args.object);
+            ASSERT_EQ(expectedIndex, index);
+            ASSERT_EQ(expectedObject, object);
 
             expectedCallback = false;
             expectedIndex = -1;
             expectedObject = nullptr;
         });
-    list.onMoved([&](const auto& args) { ASSERT_TRUE(false); });
-    list.onRemoved([&](const auto& args) { ASSERT_TRUE(false); });
+    list.onMoved([&](QObject* object, int from, int to) { ASSERT_TRUE(false); });
+    list.onRemoved([&](QObject* object, int index) { ASSERT_TRUE(false); });
 
     expectedCallback = true;
     expectedIndex = 0;
@@ -331,18 +325,18 @@ TEST_F(QOlmTestMock, InsertQObject)
     QObject* expectedObject = nullptr;
 
     list.onInserted(
-        [&](const auto& args)
+        [&](QObject* object, int index)
         {
             ASSERT_TRUE(expectedCallback);
-            ASSERT_EQ(expectedIndex, args.index);
-            ASSERT_EQ(expectedObject, args.object);
+            ASSERT_EQ(expectedIndex, index);
+            ASSERT_EQ(expectedObject, object);
 
             expectedCallback = false;
             expectedIndex = -1;
             expectedObject = nullptr;
         });
-    list.onMoved([&](const auto& args) { ASSERT_TRUE(false); });
-    list.onRemoved([&](const auto& args) { ASSERT_TRUE(false); });
+    list.onMoved([&](QObject* object, int from, int to) { ASSERT_TRUE(false); });
+    list.onRemoved([&](QObject* object, int index) { ASSERT_TRUE(false); });
 
     expectedCallback = true;
     expectedIndex = 0;
@@ -492,17 +486,17 @@ TEST_F(QOlmTestMock, InsertList)
     std::queue<std::pair<int, QObject*>> expectedCallback;
 
     list.onInserted(
-        [&](const auto& args)
+        [&](QObject* object, int index)
         {
             ASSERT_TRUE(!expectedCallback.empty());
-            const auto [index, object] = expectedCallback.front();
-            ASSERT_EQ(index, args.index);
-            ASSERT_EQ(object, args.object);
+            const auto [expectedIndex, expectedObject] = expectedCallback.front();
+            ASSERT_EQ(index, expectedIndex);
+            ASSERT_EQ(object, expectedObject);
 
             expectedCallback.pop();
         });
-    list.onMoved([&](const auto& args) { ASSERT_TRUE(false); });
-    list.onRemoved([&](const auto& args) { ASSERT_TRUE(false); });
+    list.onMoved([&](QObject* object, int from, int to) { ASSERT_TRUE(false); });
+    list.onRemoved([&](QObject* object, int index) { ASSERT_TRUE(false); });
 
     expectedCallback.push(std::make_pair(0, foo1));
     expectedCallback.push(std::make_pair(1, foo2));
@@ -600,12 +594,12 @@ TEST_F(QOlmTestMock, AppendList)
     std::queue<std::pair<int, QObject*>> expectedCallback;
 
     list.onInserted(
-        [&](const auto& args)
+        [&](QObject* object, int index)
         {
             ASSERT_TRUE(!expectedCallback.empty());
-            const auto [index, object] = expectedCallback.front();
-            ASSERT_EQ(index, args.index);
-            ASSERT_EQ(object, args.object);
+            const auto [expectedIndex, expectedObject] = expectedCallback.front();
+            ASSERT_EQ(expectedIndex, index);
+            ASSERT_EQ(expectedObject, object);
 
             expectedCallback.pop();
         });
@@ -633,7 +627,6 @@ TEST_F(QOlmTestMock, AppendList)
         ASSERT_EQ(first, 0);
         ASSERT_EQ(last, 2);
     }
-
 
     ASSERT_EQ(list.get(0), foo1);
     ASSERT_EQ(list.get(1), foo2);
@@ -686,10 +679,8 @@ TEST_F(QOlmTestMock, PrependList)
     EXPECT_CALL(list, onObjectInserted(foo1, 0));
     EXPECT_CALL(list, onObjectAboutToBeInserted(foo2, 1));
     EXPECT_CALL(list, onObjectInserted(foo2, 1));
-    EXPECT_CALL(list, onObjectAboutToBeInserted(foo3, 2))
-        .Times(2);
-    EXPECT_CALL(list, onObjectInserted(foo3, 2))
-        .Times(2);
+    EXPECT_CALL(list, onObjectAboutToBeInserted(foo3, 2)).Times(2);
+    EXPECT_CALL(list, onObjectInserted(foo3, 2)).Times(2);
     EXPECT_CALL(list, onObjectAboutToBeInserted(foo2, 0));
     EXPECT_CALL(list, onObjectInserted(foo2, 0));
     EXPECT_CALL(list, onObjectAboutToBeInserted(foo1, 1));
@@ -699,12 +690,12 @@ TEST_F(QOlmTestMock, PrependList)
     std::queue<std::pair<int, QObject*>> expectedCallback;
 
     list.onInserted(
-        [&](const auto& args)
+        [&](QObject* object, int index)
         {
             ASSERT_TRUE(!expectedCallback.empty());
-            const auto [index, object] = expectedCallback.front();
-            ASSERT_EQ(index, args.index);
-            ASSERT_EQ(object, args.object);
+            const auto [expectedIndex, expectedObject] = expectedCallback.front();
+            ASSERT_EQ(expectedIndex, index);
+            ASSERT_EQ(expectedObject, object);
 
             expectedCallback.pop();
         });
@@ -778,10 +769,7 @@ TEST_F(QOlmTestMock, PrependList)
 class QOlmTestMockListFilled : public ::testing::Test
 {
 protected:
-    void SetUp() override
-    {
-        list.append({foo1, foo2, foo3, foo4});
-    }
+    void SetUp() override { list.append({foo1, foo2, foo3, foo4}); }
     void TearDown() override {}
 
     ::testing::NiceMock<QOlmMock<QObject>> list;
@@ -809,12 +797,12 @@ TEST_F(QOlmTestMockListFilled, Move)
     int expectedIndexTo = -1;
     QObject* expectedObject = nullptr;
     list.onMoved(
-        [&](const auto& args)
+        [&](QObject* object, int from, int to)
         {
             ASSERT_TRUE(expectedCallback);
-            ASSERT_EQ(expectedIndexFrom, args.from);
-            ASSERT_EQ(expectedIndexTo, args.to);
-            ASSERT_EQ(expectedObject, args.object);
+            ASSERT_EQ(expectedIndexFrom, from);
+            ASSERT_EQ(expectedIndexTo, to);
+            ASSERT_EQ(expectedObject, object);
 
             expectedCallback = false;
             expectedIndexFrom = -1;
@@ -912,11 +900,11 @@ TEST_F(QOlmTestMockListFilled, RemoveQObject)
     QObject* expectedObject = nullptr;
 
     list.onRemoved(
-        [&](const auto& args)
+        [&](QObject* object, int index)
         {
             ASSERT_TRUE(expectedCallback);
-            ASSERT_EQ(expectedIndex, args.index);
-            ASSERT_EQ(expectedObject, args.object);
+            ASSERT_EQ(expectedIndex, index);
+            ASSERT_EQ(expectedObject, object);
 
             expectedCallback = false;
             expectedIndex = -1;
@@ -979,12 +967,12 @@ TEST_F(QOlmTestMockListFilled, RemoveList)
     std::queue<std::pair<int, QObject*>> expectedCallback;
 
     list.onRemoved(
-        [&](const auto& args)
+        [&](QObject* object, int index)
         {
             ASSERT_TRUE(!expectedCallback.empty());
-            const auto [index, object] = expectedCallback.front();
-            ASSERT_EQ(index, args.index);
-            ASSERT_EQ(object, args.object);
+            const auto [expectedIndex, expectedObject] = expectedCallback.front();
+            ASSERT_EQ(expectedIndex, index);
+            ASSERT_EQ(expectedObject, object);
 
             expectedCallback.pop();
         });
@@ -1032,14 +1020,13 @@ TEST_F(QOlmTestMockListFilled, RemoveList)
 
     list.remove(QList<QObject*>());
     ASSERT_EQ(spyAboutToRemoved.count(), 0);
-    ASSERT_EQ(spyRemoved.count(),0);
+    ASSERT_EQ(spyRemoved.count(), 0);
 
     //Remove a nullptr list
 
     list.remove(nullptr);
     ASSERT_EQ(spyAboutToRemoved.count(), 0);
-    ASSERT_EQ(spyRemoved.count(),0);
-
+    ASSERT_EQ(spyRemoved.count(), 0);
 }
 TEST_F(QOlmTestMockListFilled, RemoveIndex)
 {
@@ -1061,12 +1048,12 @@ TEST_F(QOlmTestMockListFilled, RemoveIndex)
     QObject* expectedObject = nullptr;
 
     list.onRemoved(
-        [&](const auto& args)
+        [&](QObject* object, int index)
         {
             if(expectedCallback)
             {
-                ASSERT_EQ(expectedIndex, args.index);
-                ASSERT_EQ(expectedObject, args.object);
+                ASSERT_EQ(expectedIndex, index);
+                ASSERT_EQ(expectedObject, object);
 
                 expectedCallback = false;
                 expectedIndex = -1;
@@ -1074,9 +1061,9 @@ TEST_F(QOlmTestMockListFilled, RemoveIndex)
             }
             if(!expectedCallbackList.empty())
             {
-                const auto [index, object] = expectedCallbackList.front();
-                ASSERT_EQ(index, args.index);
-                ASSERT_EQ(object, args.object);
+                const auto [objectIndex, objectObject] = expectedCallbackList.front();
+                ASSERT_EQ(objectIndex, index);
+                ASSERT_EQ(objectObject, object);
 
                 expectedCallbackList.pop();
             }
@@ -1112,7 +1099,7 @@ TEST_F(QOlmTestMockListFilled, RemoveIndex)
     //Remove(int index, int count)
     expectedCallbackList.push(std::make_pair(1, foo2));
     expectedCallbackList.push(std::make_pair(2, foo3));
-//
+    //
     list.remove(1, 2);
     ASSERT_EQ(list.size(), 1);
     ASSERT_EQ(spyAboutToRemoved.count(), 1);
@@ -1131,17 +1118,16 @@ TEST_F(QOlmTestMockListFilled, RemoveIndex)
         ASSERT_EQ(first, 1);
         ASSERT_EQ(last, 2);
     }
-//
+    //
     //Index out of bound
-//
+    //
     list.remove(5);
 
     ASSERT_FALSE(expectedCallback || !expectedCallbackList.empty());
     ASSERT_EQ(spyAboutToRemoved.count(), 0);
     ASSERT_EQ(spyRemoved.count(), 0);
-//
+    //
     ASSERT_EQ(list.get(0), foo1);
-
 }
 
 TEST_F(QOlmTestMockListFilled, Clear)
@@ -1163,12 +1149,12 @@ TEST_F(QOlmTestMockListFilled, Clear)
     std::queue<std::pair<int, QObject*>> expectedCallback;
 
     list.onRemoved(
-        [&](const auto& args)
+        [&](QObject* object, int index)
         {
             ASSERT_TRUE(!expectedCallback.empty());
-            const auto [index, object] = expectedCallback.front();
-            ASSERT_EQ(index, args.index);
-            ASSERT_EQ(object, args.object);
+            const auto [expectedIndex, expectedObject] = expectedCallback.front();
+            ASSERT_EQ(expectedIndex, index);
+            ASSERT_EQ(expectedObject, object);
 
             expectedCallback.pop();
         });
@@ -1200,28 +1186,12 @@ TEST_F(QOlmTestMockListFilled, Clear)
     ASSERT_TRUE(expectedCallback.empty());
 }
 
-TEST_F(QOlmTestMockListFilled, First)
-{
-    ASSERT_EQ(list.first(), foo1);
-}
+TEST_F(QOlmTestMockListFilled, First) { ASSERT_EQ(list.first(), foo1); }
 
-TEST_F(QOlmTestMock, First)
-{
-    ASSERT_EQ(list.first(), nullptr);
-}
+TEST_F(QOlmTestMock, First) { ASSERT_EQ(list.first(), nullptr); }
 
-TEST_F(QOlmTestMockListFilled, Last)
-{
-    ASSERT_EQ(list.last(), foo4);
-}
+TEST_F(QOlmTestMockListFilled, Last) { ASSERT_EQ(list.last(), foo4); }
 
-TEST_F(QOlmTestMock, Last)
-{
-    ASSERT_EQ(list.last(), nullptr);
-}
+TEST_F(QOlmTestMock, Last) { ASSERT_EQ(list.last(), nullptr); }
 
-TEST_F(QOlmTestMockListFilled, ToList)
-{
-    ASSERT_EQ(list.toList(), QList<QObject*>({foo1, foo2, foo3, foo4}));
-}
-
+TEST_F(QOlmTestMockListFilled, ToList) { ASSERT_EQ(list.toList(), QList<QObject*>({foo1, foo2, foo3, foo4})); }

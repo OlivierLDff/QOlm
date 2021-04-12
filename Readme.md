@@ -397,11 +397,6 @@ FooList list(nullptr, {"foo"}, "foo");
 
 It is recommended to only expose role that are required for `QSortFilterProxyModel ` subclass. And use native signal to property for property that often change.
 
-## Todo
-
-- [ ] Turn examples into unit tests
-- [ ] Qml Example
-
 ## Authors
 
 * [Olivier LDff](https://github.com/OlivierLDff)

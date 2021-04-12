@@ -4,7 +4,7 @@
 
 `qolm::QOlm` object based on `QAbstractListModel` that provide a list of `QObject` based class to **qml** and **c++**. The model dynamically update views by reacting to **insert**, **remove**, **move** operations.
 
-## Overview
+## 🚀 Overview
 
 
 <p align="center">
@@ -14,7 +14,7 @@
 
 `QOlm` is based on `QAbstractListModel`, and behave as a list of custom `QObject`. `QOlmBase` is detail implementation to provide `signals` and `slots` that `moc` can handle. Since `moc` isn't working with template class.
 
-### Build and execute.
+### 🔨 Build and execute.
 
 - QOlm is a header only library available as a `INTERFACE` cmake target.
 - It come with unit tests `QOlm_Tests`
@@ -41,7 +41,7 @@ FetchContent_MakeAvailable(QOlm)
 target_link_libraries(MyTarget PUBLIC QOlm)
 ```
 
-#### Execute tests
+#### ✅ Execute tests
 
 If `QOLM_ENABLE_TESTS` is on then you can execute unit test.
 
@@ -57,7 +57,7 @@ To only execute certain test in as a developer:
 ./tests/QOlm_Tests --gtest_filter=TestCaseRegEx*
 ```
 
-#### Execute Example
+#### 🎉 Execute Example
 
 The option `QOLM_ENABLE_EXAMPLES` should be turned on.
 
@@ -67,7 +67,7 @@ cmake --build . --target QOlm_Examples --config "Release"
 ./examples/QOlm_Examples
 ```
 
-#### Additional CMake flags
+#### 🔧 Additional CMake flags
 
 Since CMake is using `FetchContent` functionality, you can add flags to understand what is going on. The library also require package Qt, so you need to indicate where Qt SDK is installed. Provide the path with `CMAKE_PREFIX_PATH`.
 
@@ -82,12 +82,11 @@ cmake
 ..
 ```
 
-#### Dependencies
+#### 📌 Dependencies
 
 QOlm is fetching quite a few external libraries. Source of those libraries can be customize. Variables are in form `_REPOSITORY` and `_TAG`
 
 - Qt `Core` `Qml`.
-- `EVENTPP`: Provide typed callback for insert/removed/moved operation.
 
 ##### Dependencies of tests
 
@@ -402,8 +401,6 @@ It is recommended to only expose role that are required for `QSortFilterProxyMod
 
 - [ ] Turn examples into unit tests
 - [ ] Qml Example
-
-
 
 ## Authors
 

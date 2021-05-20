@@ -43,12 +43,12 @@ void QOlmBase::appendDefaultChild(QQmlListProperty<QObject>* list, QObject* chil
     return reinterpret_cast<QOlmBase*>(list->data)->appendDefaultChild(child);
 }
 
-int QOlmBase::defaultChildrenCount(QQmlListProperty<QObject>* list)
+QOlmBase::qolm_size_type QOlmBase::defaultChildrenCount(QQmlListProperty<QObject>* list)
 {
     return reinterpret_cast<QOlmBase*>(list->data)->defaultChildrenCount();
 }
 
-QObject* QOlmBase::defaultChild(QQmlListProperty<QObject>* list, int index)
+QObject* QOlmBase::defaultChild(QQmlListProperty<QObject>* list, qolm_size_type index)
 {
     return reinterpret_cast<QOlmBase*>(list->data)->defaultChild(index);
 }
@@ -58,7 +58,7 @@ void QOlmBase::clearDefaultChildren(QQmlListProperty<QObject>* list)
     return reinterpret_cast<QOlmBase*>(list->data)->clearDefaultChildren();
 }
 
-void QOlmBase::replaceDefaultChild(QQmlListProperty<QObject>* list, int index, QObject* child)
+void QOlmBase::replaceDefaultChild(QQmlListProperty<QObject>* list, qolm_size_type index, QObject* child)
 {
     return reinterpret_cast<QOlmBase*>(list->data)->replaceDefaultChild(index, child);
 }

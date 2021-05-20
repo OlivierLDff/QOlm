@@ -209,11 +209,16 @@ protected:
     virtual void removeLastChild() = 0;
 
 private:
+#if QT_VERSION_MAJOR < 6
+    using qolm_size_type = int;
+#else
+    using qolm_size_type = qsizetype;
+#endif
     static void appendDefaultChild(QQmlListProperty<QObject>* list, QObject* child);
-    static int defaultChildrenCount(QQmlListProperty<QObject>* list);
-    static QObject* defaultChild(QQmlListProperty<QObject>* list, int index);
+    static qolm_size_type defaultChildrenCount(QQmlListProperty<QObject>* list);
+    static QObject* defaultChild(QQmlListProperty<QObject>* list, qolm_size_type index);
     static void clearDefaultChildren(QQmlListProperty<QObject>* list);
-    static void replaceDefaultChild(QQmlListProperty<QObject>* list, int index, QObject* child);
+    static void replaceDefaultChild(QQmlListProperty<QObject>* list, qolm_size_type index, QObject* child);
     static void removeLastChild(QQmlListProperty<QObject>* list);
 };
 

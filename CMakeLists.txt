@@ -110,9 +110,9 @@ else()
 endif()
 
 target_include_directories(${QOLM_TARGET} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
-        )
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
 target_compile_features(${QOLM_TARGET} PUBLIC cxx_std_17)
 target_link_libraries(${QOLM_TARGET} PUBLIC Qt::Core Qt::Qml)
 
@@ -140,19 +140,20 @@ endif()
 
 include(GNUInstallDirs)
 install(TARGETS ${QOLM_TARGET}
-        EXPORT ${QOLM_TARGET}Targets)
+  EXPORT ${QOLM_TARGET}Targets
+)
 
 export(EXPORT ${QOLM_TARGET}Targets
-        FILE "${CMAKE_CURRENT_BINARY_DIR}/${QATERIAL_TARGET}/${QOLM_TARGET}Targets.cmake"
-        NAMESPACE ${QOLM_TARGET}::
-        )
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/${QATERIAL_TARGET}/${QOLM_TARGET}Targets.cmake"
+  NAMESPACE ${QOLM_TARGET}::
+)
 
 set(ConfigPackageLocation lib/cmake/${QOLM_TARGET})
 install(EXPORT ${QOLM_TARGET}Targets
-        FILE
-        ${QOLM_TARGET}Targets.cmake
-        NAMESPACE
-        ${QOLM_TARGET}::
-        DESTINATION
-        ${ConfigPackageLocation}
-        )
+  FILE
+  ${QOLM_TARGET}Targets.cmake
+  NAMESPACE
+  ${QOLM_TARGET}::
+  DESTINATION
+  ${ConfigPackageLocation}
+)

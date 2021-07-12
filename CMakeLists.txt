@@ -109,7 +109,10 @@ else()
   target_compile_definitions(${QOLM_TARGET} PUBLIC "-DQOLM_STATIC")
 endif()
 
-target_include_directories(${QOLM_TARGET} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${QOLM_TARGET} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
 target_compile_features(${QOLM_TARGET} PUBLIC cxx_std_17)
 target_link_libraries(${QOLM_TARGET} PUBLIC Qt::Core Qt::Qml)
 
@@ -134,3 +137,23 @@ endif()
 if(QOLM_MAIN_PROJECT)
   include(cmake/PrintConfiguration.cmake)
 endif()
+
+include(GNUInstallDirs)
+install(TARGETS ${QOLM_TARGET}
+  EXPORT ${QOLM_TARGET}Targets
+)
+
+export(EXPORT ${QOLM_TARGET}Targets
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/${QATERIAL_TARGET}/${QOLM_TARGET}Targets.cmake"
+  NAMESPACE ${QOLM_TARGET}::
+)
+
+set(ConfigPackageLocation lib/cmake/${QOLM_TARGET})
+install(EXPORT ${QOLM_TARGET}Targets
+  FILE
+  ${QOLM_TARGET}Targets.cmake
+  NAMESPACE
+  ${QOLM_TARGET}::
+  DESTINATION
+  ${ConfigPackageLocation}
+)

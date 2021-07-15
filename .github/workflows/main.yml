@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macOS-latest, ubuntu-latest]
-        version: ['5.15.2', '6.1.0']
+        qt-version: ['5.15.2', '6.1.0']
     steps:
       - uses: actions/checkout@v2
 
@@ -18,14 +18,14 @@ jobs:
         id: cache-qt
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.version }}
-          key: ${{ runner.os }}-QtCache-${{ matrix.version }}
+          path: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
+          key: ${{ runner.os }}-QtCache-${{ matrix.qt-version }}
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
         with:
-          version: ${{ matrix.version }}
-          dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.version }}
+          version: ${{ matrix.qt-version }}
+          dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
 
       - name: Configure QOlm

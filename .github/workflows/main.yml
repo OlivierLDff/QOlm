@@ -10,45 +10,46 @@ jobs:
         os: [windows-latest, macOS-latest, ubuntu-latest]
         qt-version: ['5.15.2', '6.1.0']
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Cache Qt
+      -
+        uses: actions/checkout@v2
+      -
+        name: 📦️ Cache Qt
         id: cache-qt
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           key: ${{ runner.os }}-QtCache-${{ matrix.qt-version }}
-
-      - name: Install Qt
+      -
+        name: ⬆️ Install Qt
         uses: jurplel/install-qt-action@v2
         with:
           version: ${{ matrix.qt-version }}
           dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
-
-      - name: Configure QOlm
+      -
+        name: 🔧 Configure QOlm
         run: |
-          mkdir -p build
+          cmake -E make_directory build
           cmake -DQOLM_ENABLE_TESTS=ON -DQOLM_ENABLE_EXAMPLES=ON -DCMAKE_BUILD_TYPE="Release" -B build -S .
         shell: bash
-
-      - name: Build QOlm
+      -
+        name: 🔨 Build QOlm
         run: cmake --build build --target "QOlm" --config "Release" -j
-
-      - name: Build Examples
+      -
+        name: 🔨 Build Examples
         run: cmake --build build --target "QOlm_Example" --config "Release" -j
-
-      - name: Build Cpp Tests
+      -
+        name: 🔨 Build Cpp Tests
         run: cmake --build build --target "QOlm_Tests" --config "Release" -j
-
-      - name: Build Qml Tests
+      -
+        name: 🔨 Build Qml Tests
         run: cmake --build build --target "QOlm_TestsQml" --config "Release" -j
-
-      - name: Run unit tests
+      -
+        name: ✅ Run unit tests
         run: cd build && ctest --build-config "Release" --progress --verbose
         if: "!contains(matrix.os, 'ubuntu')"
-
-      - name: Run unit tests
+      -
+        name: ✅ Run unit tests
         run: |
           sudo apt install libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-xinerama0 libxcb-keysyms1 libxcb1 libxcb-render-util0 libxcb-randr0
           cd build

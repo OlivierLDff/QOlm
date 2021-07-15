@@ -1,4 +1,4 @@
-// How can I use this ?
+﻿// How can I use this ?
 //
 // Well, license here is pretty "super-open", not even copy-left or copy-right, basically its close to the WTFPL, just use it as you want, as it's the most practical to you :
 //
@@ -10,7 +10,7 @@
 // If you like it so much you want to spread the word, thank you, you're welcome.
 // Enjoy !
 
-#include <QOlm/QOlmBase.hpp>
+#include <QOlm/Details/QOlmBase.hpp>
 
 using namespace qolm;
 

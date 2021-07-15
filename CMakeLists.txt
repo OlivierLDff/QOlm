@@ -98,8 +98,8 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Qml REQUIRED)
 # ───── LIBRARY ─────
 
 set(QOLM_HDRS
-  include/QOlm/Export.hpp
-  include/QOlm/QOlmBase.hpp
+  include/QOlm/Details/Export.hpp
+  include/QOlm/Details/QOlmBase.hpp
   include/QOlm/QOlm.hpp
 )
 

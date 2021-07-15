@@ -128,7 +128,6 @@ set_target_properties(${QOLM_TARGET} PROPERTIES FOLDER ${QOLM_FOLDER_PREFIX})
 source_group("QOlm" FILES ${QOLM_SRCS})
 set_target_properties(${QOLM_TARGET} PROPERTIES
   AUTOMOC TRUE
-  PUBLIC_HEADER "${QOLM_HDRS}"
 )
 
 # ───── LIBRARY TESTS ─────
@@ -155,10 +154,14 @@ endif()
 
 if(QOLM_ENABLE_INSTALL)
   include(GNUInstallDirs)
-  install(TARGETS ${QOLM_TARGET}
-    EXPORT ${QOLM_TARGET}Targets
-    PUBLIC_HEADER DESTINATION include/QOlm
-  )
+  install(TARGETS ${QOLM_TARGET} EXPORT ${QOLM_TARGET}Targets)
+
+  foreach(HDR_FILE ${QOLM_HDRS})
+    get_filename_component(HDR_DIRECTORY ${HDR_FILE} DIRECTORY)
+    get_filename_component(ABSOLUTE_HDR_DIRECTORY ${HDR_DIRECTORY} ABSOLUTE)
+    file(RELATIVE_PATH RELATIVE_HDR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include ${ABSOLUTE_HDR_DIRECTORY})
+    install(FILES ${HDR_FILE} DESTINATION include/${RELATIVE_HDR_PATH})
+  endforeach()
 
   export(EXPORT ${QOLM_TARGET}Targets
     FILE "${CMAKE_CURRENT_BINARY_DIR}/${QATERIAL_TARGET}/${QOLM_TARGET}Targets.cmake"

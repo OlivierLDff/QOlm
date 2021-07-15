@@ -145,9 +145,13 @@ if(QOLM_ENABLE_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
+# ───── LOG BUILD COMMAND ─────
+
 if(QOLM_MAIN_PROJECT)
   include(cmake/PrintConfiguration.cmake)
 endif()
+
+# ───── INSTALLATION ─────
 
 if(QOLM_INSTALL)
   include(GNUInstallDirs)

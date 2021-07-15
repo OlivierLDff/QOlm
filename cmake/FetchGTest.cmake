@@ -11,6 +11,7 @@ FetchContent_Declare(
 )
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+option(INSTALL_GTEST "Enable installation of googletest. (Projects embedding googletest may want to turn this OFF.)" OFF)
 FetchContent_MakeAvailable(googletest)
 
 set_target_properties(gtest gtest_main gmock gmock_main PROPERTIES FOLDER "Dependencies/gtest")

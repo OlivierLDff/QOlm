@@ -16,7 +16,7 @@
 
 ### 🔨 Build and execute.
 
-- QOlm is a header only library available as a `INTERFACE` cmake target.
+- `QOlm` is the main target. It has an alias `QOlm::QOlm`.
 - It come with unit tests `QOlm_Tests`
 - It come with examples `QOlm_Examples`
 

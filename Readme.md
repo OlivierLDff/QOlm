@@ -70,6 +70,8 @@ prefix/
     ├─QOlm.lib
     └─cmake/
        └─QOlm/
+          ├─QOlmConfig.hpp
+          ├─QOlmConfigVersion.hpp
           └─QOlmTargets.cmake
 
 ```

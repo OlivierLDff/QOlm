@@ -94,10 +94,13 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Qml REQUIRED)
 
 # ───── LIBRARY ─────
 
-set(QOLM_SRCS
+set(QOLM_HDRS
   include/QOlm/Export.hpp
   include/QOlm/QOlmBase.hpp
   include/QOlm/QOlm.hpp
+)
+
+set(QOLM_SRCS ${QOLM_HDRS}
   src/QOlmBase.cpp
 )
 
@@ -118,7 +121,10 @@ target_link_libraries(${QOLM_TARGET} PUBLIC Qt::Core Qt::Qml)
 
 set_target_properties(${QOLM_TARGET} PROPERTIES FOLDER ${QOLM_FOLDER_PREFIX})
 source_group("QOlm" FILES ${QOLM_SRCS})
-set_target_properties(${QOLM_TARGET} PROPERTIES AUTOMOC TRUE)
+set_target_properties(${QOLM_TARGET} PROPERTIES
+  AUTOMOC TRUE
+  PUBLIC_HEADER "${QOLM_HDRS}"
+)
 
 # ───── LIBRARY TESTS ─────
 
@@ -141,6 +147,7 @@ endif()
 include(GNUInstallDirs)
 install(TARGETS ${QOLM_TARGET}
   EXPORT ${QOLM_TARGET}Targets
+  PUBLIC_HEADER DESTINATION include/QOlm
 )
 
 export(EXPORT ${QOLM_TARGET}Targets

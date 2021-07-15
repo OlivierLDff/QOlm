@@ -41,6 +41,45 @@ FetchContent_MakeAvailable(QOlm)
 target_link_libraries(MyTarget PRIVATE QOlm::QOlm)
 ```
 
+#### 📦️ Install
+
+`QOlm` can be installed with:
+
+```bash
+# configure
+cmake -DQOLM_INSTALL=ON ..
+
+# build
+cmake --build . --target QOlm --config "Release
+
+# install
+cmake --install . [--prefix <install-dir>] 
+```
+
+Install tree folder should look like this:
+
+```
+prefix/
+ ├─include/
+ │  └─QOlm/
+ │     ├─QOlm.hpp
+ │     └─Details/
+ │        ├─Export.hpp
+ │        └─QOlmBase.hpp
+ └─lib/
+    ├─QOlm.lib
+    └─cmake/
+       └─QOlm/
+          └─QOlmTargets.cmake
+
+```
+
+Prefix folder can be overridden 
+* with `CMAKE_INSTALL_PREFIX` at configure step.
+* with `--prefix <install-dir>` at install step.
+
+You can then include `QOlm` into another cmake project by using `find_package(QOlm) `.
+
 #### ✅ Execute tests
 
 If `QOLM_ENABLE_TESTS` is on then you can execute unit test.

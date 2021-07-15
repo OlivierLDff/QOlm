@@ -38,7 +38,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(QOlm)
 # ...
 
-target_link_libraries(MyTarget PUBLIC QOlm)
+target_link_libraries(MyTarget PRIVATE QOlm::QOlm)
 ```
 
 #### ✅ Execute tests

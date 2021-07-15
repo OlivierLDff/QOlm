@@ -40,7 +40,7 @@ message(STATUS "  QOlmTestsQml   : cmake --build . --target ${QOLM_TARGET}_Tests
 message(STATUS "  Run Tests      : ctest -C ${CMAKE_BUILD_TYPE} . --verbose --progress")
 endif()
 
-if(${QOLM_INSTALL})
+if(${QOLM_ENABLE_INSTALL})
 message(STATUS " ")
 message(STATUS "Install to \"${CMAKE_INSTALL_PREFIX}\":")
 message(STATUS "  Install        : cmake --install . [--prefix <install-dir>]")

@@ -47,7 +47,7 @@ target_link_libraries(MyTarget PRIVATE QOlm::QOlm)
 
 ```bash
 # configure
-cmake -DQOLM_INSTALL=ON ..
+cmake -DQOLM_ENABLE_INSTALL=ON ..
 
 # build
 cmake --build . --target QOlm --config "Release

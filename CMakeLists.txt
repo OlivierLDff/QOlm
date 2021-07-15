@@ -36,7 +36,7 @@ set(QOLM_TESTS_PREFIX ${QOLM_PROJECT} CACHE STRING "Prefix for all QOlm tests")
 set(QOLM_ENABLE_EXAMPLES OFF CACHE BOOL "Create or not a target for examples")
 set(QOLM_EXAMPLES_PREFIX ${QOLM_PROJECT} CACHE STRING "Prefix for all QOlm tests")
 
-set(QOLM_INSTALL ${QOLM_MAIN_PROJECT} CACHE BOOL "Generate the install target")
+set(QOLM_ENABLE_INSTALL ${QOLM_MAIN_PROJECT} CACHE BOOL "Generate the install target")
 
 # ───── VERSION ─────
 
@@ -74,7 +74,7 @@ message(STATUS "QOLM_VERSION          : " ${QOLM_VERSION})
 message(STATUS "QOLM_VERSION_TAG      : " ${QOLM_VERSION_TAG})
 message(STATUS "QOLM_FOLDER_PREFIX    : " ${QOLM_FOLDER_PREFIX})
 message(STATUS "QOLM_BUILD_SHARED     : " ${QOLM_BUILD_SHARED})
-message(STATUS "QOLM_INSTALL          : " ${QOLM_INSTALL})
+message(STATUS "QOLM_ENABLE_INSTALL   : " ${QOLM_ENABLE_INSTALL})
 
 # Tests
 message(STATUS "QOLM_ENABLE_TESTS     : " ${QOLM_ENABLE_TESTS})
@@ -153,7 +153,7 @@ endif()
 
 # ───── INSTALLATION ─────
 
-if(QOLM_INSTALL)
+if(QOLM_ENABLE_INSTALL)
   include(GNUInstallDirs)
   install(TARGETS ${QOLM_TARGET}
     EXPORT ${QOLM_TARGET}Targets

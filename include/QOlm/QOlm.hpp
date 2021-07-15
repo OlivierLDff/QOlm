@@ -13,7 +13,7 @@
 #ifndef __QOLM_QOLM_HPP__
 #define __QOLM_QOLM_HPP__
 
-#include <QOlm/QOlmBase.hpp>
+#include <QOlm/Details/QOlmBase.hpp>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>

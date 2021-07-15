@@ -13,7 +13,7 @@
 #ifndef __QOLM_QOLMBASE_HPP__
 #define __QOLM_QOLMBASE_HPP__
 
-#include <QOlm/Export.hpp>
+#include <QOlm/Details/Export.hpp>
 
 #include <QtCore/QAbstractListModel>
 #include <QtQml/QQmlListProperty>

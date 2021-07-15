@@ -39,3 +39,5 @@ message(STATUS "  QOlmTests      : cmake --build . --target ${QOLM_TARGET}_Tests
 message(STATUS "  QOlmTestsQml   : cmake --build . --target ${QOLM_TARGET}_TestsQml --config ${CMAKE_BUILD_TYPE} ${PARALLEL_LEVEL}")
 message(STATUS "  Run Tests      : ctest -C ${CMAKE_BUILD_TYPE} . --verbose --progress")
 endif()
+
+message(STATUS " ")

@@ -98,6 +98,8 @@ QOlm is fetching quite a few external libraries. Source of those libraries can b
 Most of the time you want to store more than just `QObject` type, so create your custom type.
 
 ```cpp
+#include <QtCore/QObject>
+
 class Foo : public QObject
 {
     Q_OBJECT

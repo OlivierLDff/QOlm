@@ -168,6 +168,13 @@ if(QOLM_ENABLE_INSTALL)
     NAMESPACE ${QOLM_TARGET}::
   )
 
+  include(CMakePackageConfigHelpers)
+  write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/${QOLM_TARGET}/${QOLM_TARGET}ConfigVersion.cmake"
+    VERSION ${QOLM_VERSION}
+    COMPATIBILITY AnyNewerVersion
+  )
+
   set(ConfigPackageLocation lib/cmake/${QOLM_TARGET})
   install(EXPORT ${QOLM_TARGET}Targets
     FILE
@@ -176,5 +183,11 @@ if(QOLM_ENABLE_INSTALL)
     ${QOLM_TARGET}::
     DESTINATION
     ${ConfigPackageLocation}
+  )
+  install(
+    FILES
+      "${CMAKE_CURRENT_BINARY_DIR}/${QOLM_TARGET}/${QOLM_TARGET}ConfigVersion.cmake"
+    DESTINATION
+      ${ConfigPackageLocation}
   )
 endif()

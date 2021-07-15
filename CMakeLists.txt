@@ -112,6 +112,8 @@ else()
   target_compile_definitions(${QOLM_TARGET} PUBLIC "-DQOLM_STATIC")
 endif()
 
+add_library(${QOLM_TARGET}::${QOLM_TARGET} ALIAS ${QOLM_TARGET})
+
 target_include_directories(${QOLM_TARGET} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>

@@ -119,7 +119,7 @@ add_library(${QOLM_TARGET}::${QOLM_TARGET} ALIAS ${QOLM_TARGET})
 
 target_include_directories(${QOLM_TARGET} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_compile_features(${QOLM_TARGET} PUBLIC cxx_std_17)
 target_link_libraries(${QOLM_TARGET} PUBLIC Qt::Core Qt::Qml)

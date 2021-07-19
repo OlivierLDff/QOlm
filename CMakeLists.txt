@@ -24,6 +24,7 @@ endif()
 # General
 set(QOLM_PROJECT "QOlm" CACHE STRING "Project Name")
 set(QOLM_TARGET ${QOLM_PROJECT} CACHE STRING "QOlm library name")
+set(QOLM_VERBOSE OFF CACHE BOOL "QOlm log configuration")
 
 set(QOLM_BUILD_SHARED OFF CACHE BOOL "Build as a shared library (ON) or as static (OFF)")
 set(QOLM_FOLDER_PREFIX ${QOLM_PROJECT} CACHE STRING "Prefix folder for all QOlm generated targets in generated project (only decorative)")
@@ -65,30 +66,34 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # ───── CONFIG ─────
 
-message(STATUS "---------------- ${QOLM_PROJECT} ${QOLM_VERSION} OPTIONS. ----------------")
+if(QOLM_VERBOSE)
 
-#General
-message(STATUS "QOLM_PROJECT          : " ${QOLM_PROJECT})
-message(STATUS "QOLM_TARGET           : " ${QOLM_TARGET})
-message(STATUS "QOLM_VERSION          : " ${QOLM_VERSION})
-message(STATUS "QOLM_VERSION_TAG      : " ${QOLM_VERSION_TAG})
-message(STATUS "QOLM_FOLDER_PREFIX    : " ${QOLM_FOLDER_PREFIX})
-message(STATUS "QOLM_BUILD_SHARED     : " ${QOLM_BUILD_SHARED})
-message(STATUS "QOLM_ENABLE_INSTALL   : " ${QOLM_ENABLE_INSTALL})
+  message(STATUS "---------------- ${QOLM_PROJECT} ${QOLM_VERSION} OPTIONS. ----------------")
 
-# Tests
-message(STATUS "QOLM_ENABLE_TESTS     : " ${QOLM_ENABLE_TESTS})
-if(QOLM_ENABLE_TESTS)
-  message(STATUS "QOLM_TESTS_PREFIX     : " ${QOLM_TESTS_PREFIX})
+  #General
+  message(STATUS "QOLM_PROJECT          : " ${QOLM_PROJECT})
+  message(STATUS "QOLM_TARGET           : " ${QOLM_TARGET})
+  message(STATUS "QOLM_VERSION          : " ${QOLM_VERSION})
+  message(STATUS "QOLM_VERSION_TAG      : " ${QOLM_VERSION_TAG})
+  message(STATUS "QOLM_FOLDER_PREFIX    : " ${QOLM_FOLDER_PREFIX})
+  message(STATUS "QOLM_BUILD_SHARED     : " ${QOLM_BUILD_SHARED})
+  message(STATUS "QOLM_ENABLE_INSTALL   : " ${QOLM_ENABLE_INSTALL})
+
+  # Tests
+  message(STATUS "QOLM_ENABLE_TESTS     : " ${QOLM_ENABLE_TESTS})
+  if(QOLM_ENABLE_TESTS)
+    message(STATUS "QOLM_TESTS_PREFIX     : " ${QOLM_TESTS_PREFIX})
+  endif()
+
+  # Examples
+  message(STATUS "QOLM_ENABLE_EXAMPLES  : " ${QOLM_ENABLE_EXAMPLES})
+  if(QOLM_ENABLE_EXAMPLES)
+    message(STATUS "QOLM_EXAMPLES_PREFIX  : " ${QOLM_EXAMPLES_PREFIX})
+  endif()
+
+  message(STATUS "---------------- DONE WITH OPTIONS. -----------------")
+
 endif()
-
-# Examples
-message(STATUS "QOLM_ENABLE_EXAMPLES  : " ${QOLM_ENABLE_EXAMPLES})
-if(QOLM_ENABLE_EXAMPLES)
-  message(STATUS "QOLM_EXAMPLES_PREFIX  : " ${QOLM_EXAMPLES_PREFIX})
-endif()
-
-message(STATUS "---------------- DONE WITH OPTIONS. -----------------")
 
 # ───── DEPENDENCIES ─────
 

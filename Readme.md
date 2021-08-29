@@ -14,13 +14,22 @@
 
 `QOlm` is based on `QAbstractListModel`, and behave as a list of custom `QObject`. `QOlmBase` is detail implementation to provide `signals` and `slots` that `moc` can handle. Since `moc` isn't working with template class.
 
-### 🔨 Build and execute.
+### 🔨 Build and integrate
 
 - `QOlm` is the main target. It has an alias `QOlm::QOlm`.
 - It come with unit tests `QOlm_Tests`
 - It come with examples `QOlm_Examples`
 
-#### CMake super build
+#### CMake add_subdirectory
+
+Copy QOlm source in your project, and simply call `add_subdirectory` to enable `QOlm::QOlm` target
+
+```cmake
+add_subdirectory(path/to/qolm-src)
+target_link_libraries(MyTarget PRIVATE QOlm::QOlm)
+```
+
+#### CMake FetchContent
 
 Add the following code snippet to your `CMakelists.txt`. This will download and build QOlm with `MyTarget`.
 
@@ -38,6 +47,20 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(QOlm)
 # ...
 
+target_link_libraries(MyTarget PRIVATE QOlm::QOlm)
+```
+
+#### CPM.cmake
+
+Include QOlm with [CPM.cmake](https://github.com/cpm-cmake/CPM.cmake). `CMake 3.14` is required because CPM use `FetchContent` under the hood.
+
+```cmake
+include(cmake/CPM.cmake)
+CPMAddPackage(
+  NAME QOlm
+  GIT_REPOSITORY "https://github.com/OlivierLDff/QOlm"
+  GIT_TAG "master"
+)
 target_link_libraries(MyTarget PRIVATE QOlm::QOlm)
 ```
 

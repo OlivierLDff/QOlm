@@ -98,7 +98,6 @@ cmake
 QOlm is fetching quite a few external libraries. Source of those libraries can be customize. Variables are in form `_REPOSITORY` and `_TAG`
 
 - Qt `Core` `Qml`.
-- `EVENTPP`: Provide typed callback for insert/removed/moved operation.
 
 ### Dependencies of tests
 

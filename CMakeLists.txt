@@ -63,6 +63,8 @@ set(QOLM_VERSION ${QOLM_VERSION_MAJOR}.${QOLM_VERSION_MINOR}.${QOLM_VERSION_PATC
 project(${QOLM_PROJECT} VERSION ${QOLM_VERSION} LANGUAGES CXX)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+include(GNUInstallDirs)
+
 # ───── CONFIG ─────
 
 message(STATUS "---------------- ${QOLM_PROJECT} ${QOLM_VERSION} OPTIONS. ----------------")
@@ -153,7 +155,6 @@ endif()
 # ───── INSTALLATION ─────
 
 if(QOLM_ENABLE_INSTALL)
-  include(GNUInstallDirs)
   install(TARGETS ${QOLM_TARGET} EXPORT ${QOLM_TARGET}Targets)
 
   foreach(HDR_FILE ${QOLM_HDRS})

@@ -27,6 +27,15 @@ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
   set(QOLM_MAIN_PROJECT ON)
 endif()
 
+# ──── Default build to Release ────
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE
+      "Release"
+      CACHE STRING "Choose Release or Debug" FORCE
+  )
+endif()
+
 # ───── OPTIONS ─────
 
 # General

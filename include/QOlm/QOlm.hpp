@@ -879,12 +879,12 @@ private:
         onObjectMoved(object, src, dest);
         Q_EMIT objectMoved(object, src, dest);
     }
-    void objectAboutToBeRemovedNotify(_Object* object, int index)
+    void objectAboutToBeRemovedNotify(_Object* object, int index) { onObjectAboutToBeRemoved(object, index); }
+    void objectRemovedNotify(_Object* object, int index)
     {
-        onObjectAboutToBeRemoved(object, index);
+        onObjectRemoved(object, index);
         Q_EMIT objectRemoved(object, index);
     }
-    void objectRemovedNotify(_Object* object, int index) { onObjectRemoved(object, index); }
 
 protected:
     virtual void onObjectAboutToBeInserted(_Object* object, int index) {}

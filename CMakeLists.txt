@@ -119,8 +119,10 @@ endif()
 
 # ───── DEPENDENCIES ─────
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Qml REQUIRED)
+if(NOT TARGET Qt::Core)
+  find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
+  find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Qml REQUIRED)
+endif()
 
 # ───── LIBRARY ─────
 

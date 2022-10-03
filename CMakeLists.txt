@@ -84,7 +84,9 @@ if(QOLM_MAIN_PROJECT)
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 endif()
 
-include(GNUInstallDirs)
+if(QOLM_ENABLE_INSTALL)
+  include(GNUInstallDirs)
+endif()
 
 # ───── CONFIG ─────
 

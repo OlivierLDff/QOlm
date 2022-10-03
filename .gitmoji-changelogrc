@@ -1,0 +1,7 @@
+{
+    "project": {
+        "name": "naorpcpp",
+        "description": "A native C++ implementation for naorpc",
+        "version": "0.0.0"
+    }
+}

@@ -1,0 +1,40 @@
+name: 😜 Gitmoji Changelog
+
+on:
+  push:
+    tags:
+      - '**'
+
+jobs:
+
+  changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+    -
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0 # 👈 Required to retrieve git history for changelog
+    -
+      name: "😜 Gitmoji Changelog"
+      run: |
+        npm install -g gitmoji-changelog
+        gitmoji-changelog --preset generic
+    -
+      uses: EndBug/add-and-commit@7f650514d761cfbf4479f4cbb5b1ff5ea6e77fe8
+      name: "Commit Changelog"
+      with:
+        default_author: github_actions
+        message: '📝 Update Changelog'
+        new_branch: changelog-update-${{ github.run_id }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    -
+      name: Create Pull Request
+      uses: devops-infra/action-pull-request@f1ba84bbd34181cb26b0c66d60fa39543be0d1c7
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        source_branch: changelog-update-${{ github.run_id }}
+        target_branch: main
+        title: 😜 Gitmoji Changelog
+        body: "**Automated pull request**"

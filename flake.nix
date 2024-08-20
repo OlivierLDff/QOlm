@@ -119,7 +119,7 @@
 
             HOME="/tmp" xvfb-run dbus-run-session \
               --config-file=${pkgs.dbus}/share/dbus-1/session.conf \
-              ctest -C "${cmakeConfigType}" --output-on-failure
+              ctest -C "${cmakeConfigType}" --output-on-failure --verbose
           '';
 
           installPhase = ''

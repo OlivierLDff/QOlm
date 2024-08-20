@@ -87,6 +87,7 @@
           cmakeFlags = [
             (pkgs.lib.strings.cmakeBool "BUILD_SHARED_LIBS" true)
             (pkgs.lib.strings.cmakeBool "QOLM_ENABLE_TESTS" doCheck)
+            (pkgs.lib.strings.cmakeBool "QOLM_ENABLE_EXAMPLES" doCheck)
             (pkgs.lib.strings.cmakeBool "QOLM_USE_LOCAL_CPM_FILE" true)
           ];
 
@@ -109,6 +110,9 @@
           checkPhase = pkgs.lib.optionalString doCheck ''
             cmake --build . --config ${cmakeConfigType} --target \
               QOlm_Tests \
+              QOlm_TestsQml \
+              QOlm_Example \
+              QOlm_ExampleQml \
               --parallel $NIX_BUILD_CORES
 
             ${shellHook}

@@ -115,21 +115,16 @@
               QOlm_ExampleQml \
               --parallel $NIX_BUILD_CORES
 
+            echo "Run shell hook"
             ${shellHook}
 
-            HOME="/tmp" xvfb-run dbus-run-session \
+            xvfb-run dbus-run-session \
               --config-file=${pkgs.dbus}/share/dbus-1/session.conf \
               ctest -C "${cmakeConfigType}" --output-on-failure --verbose
           '';
 
           installPhase = ''
-            mkdir -p $out/bin
-            mv "./${cmakeConfigType}/KrameraDaemon" "$out/bin/kdaemon"
-          '';
-
-          doInstallCheck = doCheck;
-          installCheckPhase = pkgs.lib.optionalString doInstallCheck ''
-            xvfb-run $out/bin/kdaemon --help
+            cmake --install . --config ${cmakeConfigType} --prefix $out
           '';
         };
 
@@ -156,7 +151,7 @@
         lazygit
         neovim
       ]
-        ++ optionals (stdenv.isLinux) [
+        ++ pkgs.lib.lists.optionals (stdenv.isLinux) [
         gdb
       ];
 

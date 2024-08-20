@@ -6,3 +6,6 @@
 *.idea
 # For macOs users
 .DS_Store
+
+# nix
+result*

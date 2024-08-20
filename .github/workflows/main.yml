@@ -11,21 +11,13 @@ jobs:
         qt-version: ['5.15.2', '6.2.0']
     steps:
       -
-        uses: actions/checkout@v2
-      -
-        name: 📦️ Cache Qt
-        id: cache-qt
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
-          key: ${{ runner.os }}-QtCache-${{ matrix.qt-version }}
+        uses: actions/checkout@v4
       -
         name: ⬆️ Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ matrix.qt-version }}
-          dir: ${{ github.workspace }}/Qt-${{ runner.os }}-${{ matrix.qt-version }}
-          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          cache: true
       -
         name: 🔧 Configure QOlm
         run: |

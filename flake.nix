@@ -156,7 +156,7 @@
 
     in
     {
-      inherit packages apps;
+      inherit packages;
 
       devShells = {
         minimal = pkgs.mkShell {

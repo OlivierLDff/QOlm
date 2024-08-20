@@ -1,16 +1,13 @@
-include(FetchContent)
+include(${CMAKE_CURRENT_LIST_DIR}/CPM.cmake)
 
 set(GTEST_REPOSITORY "https://github.com/OlivierLDff/googletest.git" CACHE STRING "googletest repository url")
-set(GTEST_TAG "release-1.12.1" CACHE STRING "googletest git tag")
+set(GTEST_TAG "v1.14.0" CACHE STRING "googletest git tag")
 
-FetchContent_Declare(
-  googletest
+CPMAddPackage(
+  NAME GTest
   GIT_REPOSITORY ${GTEST_REPOSITORY}
   GIT_TAG        ${GTEST_TAG}
+  OPTIONS "gtest_force_shared_crt ON"
+  OPTIONS "BUILD_GMOCK OFF"
+  OPTIONS "INSTALL_GTEST OFF"
 )
-
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-option(INSTALL_GTEST "Enable installation of googletest. (Projects embedding googletest may want to turn this OFF.)" OFF)
-FetchContent_MakeAvailable(googletest)
-
-set_target_properties(gtest gtest_main gmock gmock_main PROPERTIES FOLDER "Dependencies/gtest")

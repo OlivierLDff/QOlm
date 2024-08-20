@@ -63,12 +63,13 @@
         [ shellHook ]
       );
 
-
-      version = import ./nix/get-project-version.nix { file = ./cmake/Version.cmake; prefix = "QOLM"; };
+      version = import ./nix/get-project-version.nix { file = ./CMakeLists.txt; prefix = "QOLM"; };
+      CPM_USE_LOCAL_PACKAGES = "ON";
 
       packages = {
         qolm = with pkgs; stdenv.mkDerivation rec {
           inherit version nativeBuildInputs buildInputs nativeCheckInputs;
+          inherit CPM_USE_LOCAL_PACKAGES;
 
           pname = "qolm";
           src = nix-filter {
@@ -86,6 +87,7 @@
           cmakeFlags = [
             (pkgs.lib.strings.cmakeBool "BUILD_SHARED_LIBS" true)
             (pkgs.lib.strings.cmakeBool "QOLM_ENABLE_TESTS" doCheck)
+            (pkgs.lib.strings.cmakeBool "QOLM_USE_LOCAL_CPM_FILE" true)
           ];
 
           cmakeConfigType = "Release";
@@ -163,6 +165,7 @@
           name = "qolm-minimal-shell";
 
           inherit buildInputs shellHook;
+          inherit CPM_USE_LOCAL_PACKAGES;
 
           nativeBuildInputs = nativeBuildInputs
             ++ nativeCheckInputs
@@ -173,6 +176,7 @@
           name = "qolm-dev-shell";
 
           inherit buildInputs;
+          inherit CPM_USE_LOCAL_PACKAGES;
 
           shellHook = devShellHook;
           nativeBuildInputs = fullDevBuildInputs;

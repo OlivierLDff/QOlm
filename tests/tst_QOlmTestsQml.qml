@@ -1,5 +1,5 @@
-import QtQuick 2.0
 import QtTest 1.2
+import QtQml 2.15
 
 import QOlmTestsQml 1.0
 
@@ -170,4 +170,3 @@ TestCase
  }
 
 }
-

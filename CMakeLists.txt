@@ -43,7 +43,7 @@ set(QOLM_PROJECT "QOlm" CACHE STRING "Project Name")
 set(QOLM_TARGET ${QOLM_PROJECT} CACHE STRING "QOlm library name")
 set(QOLM_VERBOSE ${QOLM_MAIN_PROJECT} CACHE BOOL "QOlm log configuration")
 
-set(QOLM_BUILD_SHARED OFF CACHE BOOL "Build as a shared library (ON) or as static (OFF)")
+set(QOLM_BUILD_SHARED ${BUILD_SHARED_LIBS} CACHE BOOL "Build as a shared library (ON) or as static (OFF)")
 set(QOLM_FOLDER_PREFIX ${QOLM_PROJECT} CACHE STRING "Prefix folder for all QOlm generated targets in generated project (only decorative)")
 
 # Tests

@@ -118,11 +118,9 @@
             echo "Run shell hook"
             ${shellHook}
 
-            # This used to work with Qt5, but not with Qt6...?
-            # More investigation needed
-            # xvfb-run dbus-run-session \
-            #   --config-file=${pkgs.dbus}/share/dbus-1/session.conf \
-            #   ctest -C "${cmakeConfigType}" --output-on-failure --verbose
+            xvfb-run dbus-run-session \
+              --config-file=${pkgs.dbus}/share/dbus-1/session.conf \
+              ctest -C "${cmakeConfigType}" --output-on-failure --verbose
           '';
 
           installPhase = ''

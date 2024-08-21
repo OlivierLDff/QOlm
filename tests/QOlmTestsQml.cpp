@@ -1,6 +1,7 @@
 #include <QtQuickTest>
 #include <QQmlEngine>
 #include <QQmlContext>
+#include <QGuiApplication>
 
 #include <QOlm/QOlm.hpp>
 

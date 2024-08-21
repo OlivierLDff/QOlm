@@ -26,7 +26,7 @@ set(QOLM_TEST_SRCS  ${QOLM_TEST_TARGET_DIR}/Tests.cpp
 message(STATUS "Add Test: ${QOLM_TEST_TARGET}")
 
 # Create the executable
-add_executable(${QOLM_TEST_TARGET} ${QOLM_TEST_SRCS})
+qt_add_executable(${QOLM_TEST_TARGET} ${QOLM_TEST_SRCS})
 set_target_properties(${QOLM_TEST_TARGET} PROPERTIES AUTOMOC TRUE)
 target_include_directories(${QOLM_TEST_TARGET} PRIVATE ${QOLM_TEST_TARGET_DIR}/include)
 target_link_libraries(${QOLM_TEST_TARGET} PRIVATE ${QOLM_TARGET})
@@ -45,7 +45,7 @@ set(QOLM_TEST_QML_SRCS  ${QOLM_TEST_TARGET_QML_DIR}/QOlmTestsQml.cpp)
 message(STATUS "Add Test: ${QOLM_TEST_TARGET_QML}")
 
 # Create the executable
-add_executable(${QOLM_TEST_TARGET_QML} ${QOLM_TEST_QML_SRCS})
+qt_add_executable(${QOLM_TEST_TARGET_QML} ${QOLM_TEST_QML_SRCS})
 set_target_properties(${QOLM_TEST_TARGET_QML} PROPERTIES AUTOMOC TRUE AUTORCC TRUE)
 target_include_directories(${QOLM_TEST_TARGET_QML} PRIVATE ${QOLM_TEST_TARGET_QML_DIR}/include)
 target_link_libraries(${QOLM_TEST_TARGET_QML} PRIVATE ${QOLM_TARGET})

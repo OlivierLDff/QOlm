@@ -44,11 +44,6 @@
 
       buildInputs = buildInputsQt;
 
-      nativeCheckInputs = with pkgs; [
-        dbus
-        xvfb-run
-      ];
-
       shellHook = ''
         # Crazy shell hook to set up Qt environment, from:
         # https://discourse.nixos.org/t/python-qt-woes/11808/12
@@ -68,7 +63,7 @@
 
       packages = {
         qolm = with pkgs; stdenv.mkDerivation rec {
-          inherit version nativeBuildInputs buildInputs nativeCheckInputs;
+          inherit version nativeBuildInputs buildInputs;
           inherit CPM_USE_LOCAL_PACKAGES;
 
           pname = "qolm";
@@ -118,11 +113,9 @@
             echo "Run shell hook"
             ${shellHook}
 
-            # This used to work with Qt5, but not with Qt6...?
-            # More investigation needed
-            # xvfb-run dbus-run-session \
-            #   --config-file=${pkgs.dbus}/share/dbus-1/session.conf \
-            #   ctest -C "${cmakeConfigType}" --output-on-failure --verbose
+            export QT_QPA_PLATFORM=offscreen
+            echo "Run tests"
+            ctest -C "${cmakeConfigType}" --output-on-failure --verbose
           '';
 
           installPhase = ''
@@ -142,7 +135,6 @@
         gh
       ];
       fullDevBuildInputs = with pkgs; nativeBuildInputs
-        ++ nativeCheckInputs
         ++ minimalDevBuildInputs
         ++ [
         sccache
@@ -169,7 +161,6 @@
           inherit CPM_USE_LOCAL_PACKAGES;
 
           nativeBuildInputs = nativeBuildInputs
-            ++ nativeCheckInputs
             ++ minimalDevBuildInputs;
         };
 

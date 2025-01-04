@@ -1,6 +1,6 @@
 # QOlm
 
-[![](https://github.com/OlivierLDff/QOlm/workflows/CI/badge.svg)](https://github.com/OlivierLDff/QOlm/actions?query=workflow%3ACI)
+[![👷 Nix CI](https://github.com/OlivierLDff/QOlm/actions/workflows/nix.yml/badge.svg)](https://github.com/OlivierLDff/QOlm/actions/workflows/nix.yml)
 
 `qolm::QOlm` object based on `QAbstractListModel` that provide a list of `QObject` based class to **qml** and **c++**. The model dynamically update views by reacting to **insert**, **remove**, **move** operations.
 

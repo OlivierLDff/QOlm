@@ -1,5 +1,39 @@
 # Changelog
 
+<a name="3.2.3"></a>
+## 3.2.3 (2025-01-04)
+
+### Removed
+
+- 🔥 Delete .github/workflows/generate-changelog-release.yml [[7ee5d3f](https://github.com/OlivierLDff/QOlm/commit/7ee5d3f50baa74389b3e2fd0889bc7a377fcd305)]
+
+### Fixed
+
+- 🐛 Support nix-darwin by removing &#x60;xvfb-run&#x60; deps and finally run &#x60;ctest&#x60; ([#26](https://github.com/OlivierLDff/QOlm/issues/26)) [[7f2afd0](https://github.com/OlivierLDff/QOlm/commit/7f2afd09bf1b54b6abd56b24ff27b728ad76b364)]
+
+### Miscellaneous
+
+- 📝 update badge [[5aaaf9f](https://github.com/OlivierLDff/QOlm/commit/5aaaf9f5a94eb0b241f7b243e2b7df1ac2d8700a)]
+
+
+<a name="3.2.2"></a>
+## 3.2.2 (2024-08-20)
+
+### Changed
+
+- 🚨 Remove deprecated &#x60;Qt::AA_EnableHighDpiScaling&#x60; from example ([#20](https://github.com/OlivierLDff/QOlm/issues/20)) [[aa23b09](https://github.com/OlivierLDff/QOlm/commit/aa23b09cf5bedc65e33f56a486625a14689a5704)]
+- ⬆️ Update install qt action to v4 ([#22](https://github.com/OlivierLDff/QOlm/issues/22)) [[cccf1fa](https://github.com/OlivierLDff/QOlm/commit/cccf1fa42b62930188797d79dd9d7d3336937fac)]
+
+### Fixed
+
+- 💚 Use old macOS runner to run Qt5 ([#21](https://github.com/OlivierLDff/QOlm/issues/21)) [[aeb4c01](https://github.com/OlivierLDff/QOlm/commit/aeb4c01ba0da5613e05bf0fd5606832dd794f515)]
+
+### Miscellaneous
+
+- ❄️ flake support (dev shell &amp; &#x60;qolm&#x60; target) ([#23](https://github.com/OlivierLDff/QOlm/issues/23)) [[4aad491](https://github.com/OlivierLDff/QOlm/commit/4aad491596987c2acf7be06e880173c27bab8a51)]
+- 📝 Update Changelog ([#18](https://github.com/OlivierLDff/QOlm/issues/18)) [[c3c5382](https://github.com/OlivierLDff/QOlm/commit/c3c53824e132d34e58fc2e20894486729435844e)]
+
+
 <a name="3.2.1"></a>
 ## 3.2.1 (2022-10-03)
 

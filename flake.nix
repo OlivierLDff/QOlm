@@ -4,7 +4,7 @@
   description = "QOlm";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     flake-utils.url = "github:numtide/flake-utils";
     nix-filter.url = "github:numtide/nix-filter";
   };
@@ -124,11 +124,6 @@
         };
 
         default = packages.qolm;
-
-        deadnix = pkgs.runCommand "deadnix" { } ''
-          ${pkgs.deadnix}/bin/deadnix --fail ${./.}
-          mkdir $out
-        '';
       };
 
       minimalDevBuildInputs = with pkgs; [
@@ -141,9 +136,6 @@
         nixpkgs-fmt
         cmake-format
         clang-tools
-        nurl
-        lazygit
-        neovim
       ]
         ++ pkgs.lib.lists.optionals (stdenv.isLinux) [
         gdb

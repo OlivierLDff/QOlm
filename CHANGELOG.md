@@ -1,5 +1,18 @@
 # Changelog
 
+<a name="3.2.4"></a>
+## 3.2.4 (2026-01-06)
+
+### Changed
+
+- ⬆️ Upgrade to nixpkgs 25.11 ([#29](https://github.com/OlivierLDff/QOlm/issues/29)) [[089f468](https://github.com/OlivierLDff/QOlm/commit/089f4688f418007225771acc843bb8724196f2d9)]
+- ⬆️ Upgrade to nixpkgs 24.11 ([#28](https://github.com/OlivierLDff/QOlm/issues/28)) [[eae140b](https://github.com/OlivierLDff/QOlm/commit/eae140b885d489f3b488545c88e1c8973074c705)]
+
+### Miscellaneous
+
+- 😜 Gitmoji Changelog ([#27](https://github.com/OlivierLDff/QOlm/issues/27)) [[451e814](https://github.com/OlivierLDff/QOlm/commit/451e814b53e1410e61665eaac254a9e084868716)]
+
+
 <a name="3.2.3"></a>
 ## 3.2.3 (2025-01-04)
 
